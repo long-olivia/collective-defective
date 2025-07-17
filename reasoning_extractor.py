@@ -1,12 +1,11 @@
 import os
 import json
 
-a_reasoning={i: "" for i in range(1, 21)}
-
 def extract(directory, subdirectory):
     base_dir="."
     path=os.path.join(base_dir, directory, subdirectory)
     files=os.listdir(path)
+    a_reasoning={i: "" for i in range(1, 21)}
     for name in files:
         file_path=os.path.join(path, name)
         with open(file_path) as file:

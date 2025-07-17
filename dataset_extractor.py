@@ -1,10 +1,8 @@
 import os
 import json
 
-all=[]
-
 def extract(directory, subdirectory):
-    global all
+    all=[]
     base_dir="."
     path=os.path.join(base_dir, directory, subdirectory)
     files=os.listdir(path)

@@ -17,4 +17,4 @@ def extract(directory):
                 json.dump(dict, f)
 
 if __name__=="__main__":
-    extract("dict copy")
+    extract("corpus")
