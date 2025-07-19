@@ -24,6 +24,7 @@ def extract(directory):
                 print(f"file: {name}, round: {i}")
                 all_text=data[f"{i}"]
                 for j in range(0,len(all_text)):
+                    print(j)
                     time.sleep(0.5)
                     if j%2 == 0:
                         a_score[i-1]=a_score[i-1]+call(all_text[j])
@@ -46,7 +47,7 @@ def call(text):
       "Content-Type": "application/json",
     },
     data=json.dumps({
-      "model": "moonshotai/kimi-k2:free",
+      "model": "google/gemini-2.5-flash",
       "messages": [
         {"role": "system", "content": f"{sys_prompt}"},
         {"role": "user", "content": f"Please score the following paragraph. Respond with a single float number from 0.0 to 1.0, where 0.0 is defective and 1.0 is cooperative. Refer to the system prompt for more details. Here is the text to score: {text}"}
@@ -55,6 +56,7 @@ def call(text):
     })
   )
   data=response.json()
+  print(data)
   num=float(data['choices'][0]['message']['content'])
   return num
 
