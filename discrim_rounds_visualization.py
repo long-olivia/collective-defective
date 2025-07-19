@@ -8,7 +8,7 @@ def plot(prompt_pair, arr, gpt_err, claude_err):
     width=0.35
     x = np.arange(20)
     x_labels=[str(i) for i in range(1, 21)]
-    plt.figure(figsize=(40, 7))
+    plt.figure(figsize=(15, 7))
     plt.title(f"Average Contribution per Round, {prompt_pair}, Name Condition")
     gpt_bars=plt.bar(np.arange(len(gpt)), gpt, width=width, yerr=gpt_err, capsize=5, color='powderblue', label='GPT-4o')
     claude_bars=plt.bar(np.arange(len(claude)) + width, claude, width=width, yerr= claude_err, capsize=5, color='teal', label='Sonnet 4')
