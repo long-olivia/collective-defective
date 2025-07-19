@@ -21,10 +21,9 @@ def extract(directory):
             a_score=[0]*20
             b_score=[0]*20
             for i in range(1,21):
-                print(f"file: {name}, round: {i}")
                 all_text=data[f"{i}"]
                 for j in range(0,len(all_text)):
-                    print(j)
+                    print(f"file: {name}, round: {i}, item: {j}")
                     time.sleep(0.5)
                     if j%2 == 0:
                         a_score[i-1]=a_score[i-1]+call(all_text[j])
@@ -45,6 +44,7 @@ def call(text):
     headers={
       "Authorization": f"Bearer {OPENROUTER_API_KEY}",
       "Content-Type": "application/json",
+      "Accept": "application/json"
     },
     data=json.dumps({
       "model": "google/gemini-2.5-flash",
