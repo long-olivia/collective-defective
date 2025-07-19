@@ -60,6 +60,30 @@ basic_means={
             [2.23, 1.08, 0.76, 0.59, 0.41, 0.31, 0.22, 0.18, 0.18, 0.13, 0.13, 0.12, 0.09, 0.1, 0.08, 0.07, 0.06, 0.06, 0.05, 0.03]]
 }
 
+discrim_final={
+    "CC": [324.922, 271.03200000000004], 
+    "CN": [288.752, 280.682], 
+    "CS": [261.18399999999997, 282.3239999999999], 
+    "NC": [325.87000000000006, 254.19], 
+    "NN": [279.18600000000004, 267.31600000000003], 
+    "NS": [251.84399999999994, 266.644], 
+    "SC": [324.54, 231.85000000000002], 
+    "SN": [261.0240000000001, 242.79400000000012], 
+    "SS": [243.122, 243.18200000000002]
+}
+
+basic_final={
+    "CC": [322.872, 305.332], 
+    "CN": [306.4719999999999, 305.59199999999987], 
+    "CS": [191.40600000000003, 330.37600000000003], 
+    "NC": [299.90200000000004, 235.78200000000004], 
+    "NN": [273.70399999999995, 261.10400000000004], 
+    "NS": [206.74799999999996, 217.67799999999997], 
+    "SC": [324.19000000000005, 214.62], 
+    "SN": [233.558, 217.418], 
+    "SS": [203.044, 208.46400000000003]
+}
+
 #final average dictionary. the key is the prompt pair, and the value is the array
 basic_final_avg={}
 discrim_final_avg={}
@@ -68,8 +92,11 @@ base_dir="."
 basic_round_avg={}
 discrim_round_avg={}
 
-basic_round_CI={}
-discrim_round_CI={}
+basic_round_SE={}
+discrim_round_SE={}
+
+basic_final_SE={}
+discrim_final_SE={}
 
 """
 The final_average function takes a path string. It goes into the specified directory, sums up
@@ -118,12 +145,12 @@ def per_round_avg(path):
     return average
 
 """
-The confidence function calculates the confidence interval for each prompt pairing.
+The error function calculates the standard for each round for each prompt pairing.
 """
 
-def confidence(directory, pair):
-    a_con=[0]*20
-    b_con=[0]*20
+def error(directory, pair):
+    a_err=[0]*20
+    b_err=[0]*20
     path=os.path.join(base_dir, directory, pair)
     files=os.listdir(path)
     for file_name in files:
@@ -135,17 +162,47 @@ def confidence(directory, pair):
                 if directory=="basic_results":
                     a_result=(round_data["a_contribution"]-basic_means[pair][0][index-1])**2
                     b_result=(round_data["b_contribution"]-basic_means[pair][1][index-1])**2
-                    a_con[index-1]+=a_result
-                    b_con[index-1]+=b_result
+                    a_err[index-1]+=a_result
+                    b_err[index-1]+=b_result
                 else:
                     a_result=(round_data["a_contribution"]-discrim_means[pair][0][index-1])**2
                     b_result=(round_data["b_contribution"]-discrim_means[pair][1][index-1])**2
-                    a_con[index-1]+=a_result
-                    b_con[index-1]+=b_result
-        a_con[:] = [(x / 100) ** 0.5 for x in a_con]
-        b_con[:] = [(x / 100) ** 0.5 for x in b_con]
-        confidence=[a_con, b_con]
-        return confidence
+                    a_err[index-1]+=a_result
+                    b_err[index-1]+=b_result
+        a_err[:] = [((x / 100) ** 0.5) * (1.960/10) for x in a_err]
+        b_err[:] = [((x / 100) ** 0.5) * (1.960/10) for x in b_err]
+        error=[a_err, b_err]
+    return error
+
+"""
+The error_final function calculates the standard error for the final points accumulated per prompt pairing.
+"""
+def error_final(directory, pair):
+    a_fin=0
+    b_fin=0
+    path=os.path.join(base_dir, directory, pair)
+    files=os.listdir(path)
+    for file_name in files:
+        file_path=os.path.join(path, file_name)
+        with open(file_path) as file:
+            data=json.load(file)
+            for round_data in data:
+                index=round_data["round"]
+                if index==20:
+                     if directory=="basic_results":
+                        a_result=(round_data["a_total_points_after_round"]-basic_final[pair][0])**2
+                        b_result=(round_data["b_total_points_after_round"]-basic_final[pair][1])**2
+                        a_fin+=a_result
+                        b_fin+=b_result
+                     else:
+                        a_result=(round_data["a_total_points_after_round"]-discrim_final[pair][0])**2
+                        b_result=(round_data["b_total_points_after_round"]-discrim_final[pair][1])**2
+                        a_fin+=a_result
+                        b_fin+=b_result
+        a_fin = ((a_fin / 100) ** 0.5) * (1.960/10)
+        b_fin = ((b_fin / 100) ** 0.5) * (1.960/10)
+        error_final=[a_fin, b_fin]
+    return error_final
 
 """
 The run function takes a directory (basic_results or discrim_results) and runs final_average & per_round_avg for each prompt pair.
@@ -165,21 +222,33 @@ def run(directory_name):
             discrim_round_avg[name] = per_round_avg(path)
 
 """
-The run_confidence function runs confidence interval calculations.
+The run_error_final function runs standard error calculations for final averages.
 """
-def run_confidence(directory_name):
+def run_error_final(directory_name):
     prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
     for name in prompt_pairs:
-        result=confidence(directory_name, name)
+        result=error_final(directory_name, name)
         if (directory_name == "basic_results"):
-            basic_round_CI[name] = result
+            basic_final_SE[name] = result
         else:
-            discrim_round_CI[name] = result
+            discrim_final_SE[name] = result
+
+"""
+The run_error function runs standard error calculations for round averages.
+"""
+def run_error(directory_name):
+    prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
+    for name in prompt_pairs:
+        result=error(directory_name, name)
+        if (directory_name == "basic_results"):
+            basic_round_SE[name] = result
+        else:
+            discrim_round_SE[name] = result
 
 if __name__ == "__main__":
-    run_confidence("basic_results")
-    with open("basic_CI.json", 'w') as b:
-        json.dump(basic_round_CI, b)
-    run_confidence("self_results")
-    with open("self_CI.json", 'w') as s:
-        json.dump(discrim_round_CI, s)
+    run_error("basic_results")
+    with open("basic_round_SE.json", 'w') as b:
+        json.dump(basic_round_SE, b)
+    run_error("self_results")
+    with open("self_round_SE.json", 'w') as s:
+        json.dump(discrim_round_SE, s)
