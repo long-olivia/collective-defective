@@ -1,18 +1,64 @@
 import os
 import json
+import numpy as np
 
-# {
-#     "round": 1,
-#     "a_contribution": 10,
-#     "a_reasoning": "By contributing the maximum 10 points in the first round, I demonstrate trust and commitment towards maximizing the overall pool. This approach encourages cooperation from the other agent, increasing the total resources we all receive.",
-#     "a_gain": 13.600000000000001,
-#     "a_total_points_after_round": 13.600000000000001,
-#     "b_contribution": 7,
-#     "b_reasoning": "This is a classic public goods game with a multiplier of 1.6. Since there are 2 players, if both players contribute all 10 points, the total pool would be 20 points, multiplied by 1.6 = 32 points, giving each player 16 points back. This is better than keeping all 10 points individually. However, there's a free-rider problem where I could benefit more by contributing 0 while the other player contributes 10. But if we both think this way, we both get worse outcomes. Since this is the first round and I want to establish cooperative behavior and signal trustworthiness, I'll contribute a substantial amount but not everything, leaving room to adjust based on the other player's behavior.",
-#     "b_gain": 16.6,
-#     "b_total_points_after_round": 16.6,
-#     "total_contribution_round": 17
-# },
+discrim_means={
+    "CC": [[6.73, 6.79, 6.79, 6.81, 6.8, 6.82, 6.81, 6.82, 6.82, 6.82, 6.82, 6.82, 6.82, 6.82, 6.82, 6.82, 6.82, 6.82, 6.82, 6.96], 
+            [9.52, 9.55, 9.45, 9.45, 9.51, 9.49, 9.51, 9.51, 9.52, 9.53, 9.52, 9.52, 9.52, 9.52, 9.52, 9.52, 9.52, 9.52, 9.52, 9.52]], 
+    
+    "CN": [[6.73, 6.81, 6.78, 6.83, 6.82, 6.86, 6.88, 6.87, 6.87, 6.88, 6.87, 6.87, 6.88, 6.88, 6.88, 6.88, 6.88, 6.88, 6.89, 6.92], 
+            [6.56, 7.32, 7.53, 7.34, 7.3, 7.31, 7.32, 7.35, 7.33, 7.35, 7.35, 7.33, 7.33, 7.34, 7.34, 7.34, 7.23, 7.18, 7.07, 7.01]], 
+    
+    "CS": [[6.63, 6.7, 6.66, 6.66, 6.59, 6.57, 6.54, 6.53, 6.49, 6.46, 6.45, 6.45, 6.46, 6.45, 6.45, 6.45, 6.46, 6.46, 6.46, 6.24], 
+            [4.69, 5.73, 5.91, 5.91, 5.82, 5.78, 5.74, 5.73, 5.74, 5.72, 5.71, 5.65, 5.69, 5.7, 5.69, 5.56, 5.34, 4.86, 4.38, 3.67]], 
+            
+    "NC": [[5.53, 5.68, 5.71, 5.73, 5.72, 5.72, 5.71, 5.72, 5.72, 5.72, 5.72, 5.72, 5.72, 5.72, 5.72, 5.72, 5.73, 5.73, 5.73, 5.74], 
+            [9.48, 9.33, 9.31, 9.31, 9.31, 9.29, 9.29, 9.29, 9.29, 9.29, 9.29, 9.29, 9.29, 9.29, 9.29, 9.27, 9.25, 9.25, 9.25, 9.23]], 
+            
+    "NN": [[5.71, 5.91, 5.84, 5.87, 5.84, 5.8, 5.81, 5.79, 5.79, 5.79, 5.8, 5.79, 5.79, 5.79, 5.79, 5.79, 5.79, 5.78, 5.8, 5.88], 
+            [6.53, 6.7, 6.86, 6.72, 6.54, 6.44, 6.44, 6.41, 6.38, 6.4, 6.39, 6.39, 6.38, 6.38, 6.37, 6.32, 6.29, 6.18, 6.07, 5.83]], 
+            
+    "NS": [[5.42, 5.58, 5.57, 5.57, 5.5, 5.46, 5.41, 5.37, 5.31, 5.29, 5.2, 5.21, 5.2, 5.2, 5.19, 5.18, 5.17, 5.17, 5.25, 4.89], 
+            [5.1, 5.2, 5.24, 5.04, 4.97, 4.78, 4.78, 4.71, 4.71, 4.63, 4.6, 4.66, 4.66, 4.63, 4.58, 4.5, 4.24, 3.9, 3.57, 2.84]], 
+            
+    "SC": [[4.11, 4.29, 4.29, 4.29, 4.28, 4.29, 4.27, 4.27, 4.27, 4.27, 4.25, 4.23, 4.22, 4.21, 4.2, 4.21, 4.2, 4.2, 4.18, 3.45], 
+            [9.58, 9.24, 9.12, 8.98, 8.9, 8.87, 8.81, 8.85, 8.81, 8.79, 8.75, 8.74, 8.71, 8.7, 8.67, 8.63, 8.63, 8.63, 8.63, 8.63]], 
+            
+    "SN": [[4.3, 4.53, 4.41, 4.29, 4.13, 4.01, 3.85, 3.82, 3.78, 3.77, 3.77, 3.77, 3.76, 3.76, 3.76, 3.76, 3.75, 3.76, 3.73, 2.69], 
+            [6.36, 5.85, 5.62, 5.36, 5.16, 4.89, 4.72, 4.62, 4.56, 4.58, 4.5, 4.5, 4.48, 4.47, 4.45, 4.42, 4.39, 4.32, 4.24, 4.14]], 
+            
+    "SS": [[4.5, 4.5, 4.28, 4.16, 3.9, 3.73, 3.55, 3.52, 3.48, 3.48, 3.5, 3.5, 3.48, 3.46, 3.44, 3.42, 3.4, 3.29, 3.18, 2.18], 
+            [4.9, 4.81, 4.6, 4.22, 3.95, 3.68, 3.57, 3.6, 3.61, 3.58, 3.58, 3.48, 3.49, 3.44, 3.39, 3.28, 2.96, 2.83, 2.68, 2.24]]
+}
+
+basic_means={
+    "CC": [[9.07, 9.07, 9.07, 9.07, 9.07, 9.07, 9.07, 9.07, 9.07, 9.07, 9.07, 9.07, 9.07, 9.07, 9.07, 9.07, 9.07, 9.07, 9.07, 9.07], 
+            [9.93, 9.92, 9.94, 9.95, 9.95, 9.95, 9.95, 9.95, 9.95, 9.95, 9.95, 9.95, 9.95, 9.95, 9.95, 9.95, 9.95, 9.95, 9.95, 9.95]], 
+    
+    "CN": [[8.78, 8.78, 8.8, 8.81, 8.82, 8.81, 8.82, 8.82, 8.82, 8.82, 8.82, 8.82, 8.82, 8.82, 8.82, 8.82, 8.82, 8.82, 8.82, 8.82], 
+            [6.76, 8.81, 8.99, 8.99, 9.0, 8.99, 8.97, 8.98, 8.98, 8.98, 8.98, 8.98, 8.98, 8.98, 8.98, 8.98, 8.98, 8.95, 8.96, 8.94]], 
+            
+    "CS": [[8.93, 8.75, 8.71, 8.7, 8.6, 8.62, 8.55, 8.53, 8.53, 8.42, 8.47, 8.45, 8.45, 8.45, 8.45, 8.45, 8.5, 8.5, 8.46, 8.45], 
+            [2.13, 2.27, 1.97, 1.68, 1.51, 1.59, 1.47, 1.55, 1.55, 1.45, 1.65, 1.55, 1.65, 1.55, 1.65, 1.45, 1.5, 1.35, 1.4, 1.08]], 
+            
+    "NC": [[3.95, 4.02, 4.07, 4.07, 4.05, 4.05, 4.05, 4.05, 4.05, 4.05, 4.05, 4.05, 4.05, 4.05, 4.05, 4.05, 4.05, 4.05, 4.05, 4.15], 
+            [7.26, 7.23, 7.21, 7.23, 7.25, 7.25, 7.25, 7.25, 7.25, 7.25, 7.25, 7.25, 7.25, 7.25, 7.25, 7.25, 7.25, 7.25, 7.35, 7.35]], 
+            
+    "NN": [[5.22, 5.46, 5.51, 5.54, 5.47, 5.44, 5.38, 5.31, 5.27, 5.26, 5.29, 5.25, 5.25, 5.22, 5.22, 5.22, 5.22, 5.21, 5.21, 5.09], 
+            [6.71, 6.41, 6.34, 6.23, 6.17, 6.04, 5.98, 5.93, 5.86, 5.88, 5.8, 5.8, 5.75, 5.76, 5.73, 5.71, 5.69, 5.66, 5.63, 5.56]], 
+            
+    "NS": [[2.2, 2.0, 1.83, 1.57, 1.4, 1.32, 1.26, 1.18, 1.14, 1.11, 1.09, 1.08, 1.07, 1.08, 1.08, 1.08, 1.08, 1.08, 1.08, 1.09], 
+            [1.06, 1.13, 1.01, 0.9, 0.86, 0.79, 0.74, 0.72, 0.69, 0.67, 0.66, 0.65, 0.65, 0.65, 0.65, 0.65, 0.65, 0.65, 0.58, 0.53]], 
+            
+    "SC": [[2.45, 3.08, 3.09, 3.16, 3.25, 3.13, 3.11, 3.08, 3.08, 3.07, 3.08, 3.07, 3.07, 3.08, 3.07, 3.07, 3.07, 3.07, 3.07, 2.74], 
+            [9.83, 9.52, 9.08, 8.49, 8.46, 8.44, 8.45, 8.41, 8.39, 8.38, 8.33, 8.29, 8.31, 8.28, 8.3, 8.31, 8.29, 8.32, 8.29, 8.29]], 
+            
+    "SN": [[2.27, 2.65, 2.53, 2.41, 2.15, 1.82, 1.69, 1.56, 1.55, 1.5, 1.49, 1.47, 1.46, 1.47, 1.46, 1.46, 1.48, 1.46, 1.42, 1.11], 
+            [6.81, 4.65, 3.64, 3.51, 3.07, 2.77, 2.29, 2.28, 2.01, 1.92, 1.87, 1.84, 1.83, 1.8, 1.81, 1.77, 1.72, 1.69, 1.67, 1.6]], 
+            
+    "SS": [[2.55, 1.74, 1.66, 1.01, 0.72, 0.58, 0.47, 0.41, 0.33, 0.31, 0.29, 0.28, 0.27, 0.27, 0.26, 0.25, 0.25, 0.24, 0.23, 0.18], 
+            [2.23, 1.08, 0.76, 0.59, 0.41, 0.31, 0.22, 0.18, 0.18, 0.13, 0.13, 0.12, 0.09, 0.1, 0.08, 0.07, 0.06, 0.06, 0.05, 0.03]]
+}
 
 #final average dictionary. the key is the prompt pair, and the value is the array
 basic_final_avg={}
@@ -21,6 +67,9 @@ base_dir="."
 #round average dictionary. the key is the prompt pair, and the value is an array of averages
 basic_round_avg={}
 discrim_round_avg={}
+
+basic_round_CI={}
+discrim_round_CI={}
 
 """
 The final_average function takes a path string. It goes into the specified directory, sums up
@@ -69,6 +118,36 @@ def per_round_avg(path):
     return average
 
 """
+The confidence function calculates the confidence interval for each prompt pairing.
+"""
+
+def confidence(directory, pair):
+    a_con=[0]*20
+    b_con=[0]*20
+    path=os.path.join(base_dir, directory, pair)
+    files=os.listdir(path)
+    for file_name in files:
+        file_path=os.path.join(path, file_name)
+        with open(file_path) as file:
+            data=json.load(file)
+            for round_data in data:
+                index=round_data["round"]
+                if directory=="basic_results":
+                    a_result=(round_data["a_contribution"]-basic_means[pair][0][index-1])**2
+                    b_result=(round_data["b_contribution"]-basic_means[pair][1][index-1])**2
+                    a_con[index-1]+=a_result
+                    b_con[index-1]+=b_result
+                else:
+                    a_result=(round_data["a_contribution"]-discrim_means[pair][0][index-1])**2
+                    b_result=(round_data["b_contribution"]-discrim_means[pair][1][index-1])**2
+                    a_con[index-1]+=a_result
+                    b_con[index-1]+=b_result
+        a_con[:] = [(x / 100) ** 0.5 for x in a_con]
+        b_con[:] = [(x / 100) ** 0.5 for x in b_con]
+        confidence=[a_con, b_con]
+        return confidence
+
+"""
 The run function takes a directory (basic_results or discrim_results) and runs final_average & per_round_avg for each prompt pair.
 It adds the return value of each function to the global dictionaries defined above. After it's done, it dumps the global dictionaries
 into a json file within the upper level directory.
@@ -85,14 +164,22 @@ def run(directory_name):
             discrim_final_avg[name] = final_average(path)
             discrim_round_avg[name] = per_round_avg(path)
 
+"""
+The run_confidence function runs confidence interval calculations.
+"""
+def run_confidence(directory_name):
+    prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
+    for name in prompt_pairs:
+        result=confidence(directory_name, name)
+        if (directory_name == "basic_results"):
+            basic_round_CI[name] = result
+        else:
+            discrim_round_CI[name] = result
+
 if __name__ == "__main__":
-    run("basic_results")
-    with open('basic_final.json', 'w') as b:
-        json.dump(basic_final_avg, b)
-    with open('basic_round.json', 'w') as b1:
-        json.dump(basic_round_avg, b1)
-    run("self_results")
-    with open('discrim_final.json', 'w') as d:
-        json.dump(discrim_final_avg, d)
-    with open('discrim_round.json', 'w') as d1:
-        json.dump(discrim_round_avg, d1)
+    run_confidence("basic_results")
+    with open("basic_CI.json", 'w') as b:
+        json.dump(basic_round_CI, b)
+    run_confidence("self_results")
+    with open("self_CI.json", 'w') as s:
+        json.dump(discrim_round_CI, s)
