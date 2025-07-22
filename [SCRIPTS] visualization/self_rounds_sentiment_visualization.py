@@ -41,4 +41,4 @@ def prepare(prompt_pair):
     plot(labels[prompt_pair], arr)
     
 if __name__ == "__main__":
-    prepare("SC")
+    prepare("SS")
