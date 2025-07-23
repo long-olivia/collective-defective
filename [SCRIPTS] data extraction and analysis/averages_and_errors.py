@@ -205,7 +205,7 @@ def error_final(directory, pair):
     return error_final
 
 """
-The run function takes a directory (basic_results or discrim_results) and runs final_average & per_round_avg for each prompt pair.
+The run function takes a directory (basic_results or self_results) and runs final_average & per_round_avg for each prompt pair.
 It adds the return value of each function to the global dictionaries defined above. After it's done, it dumps the global dictionaries
 into a json file within the upper level directory.
 """
