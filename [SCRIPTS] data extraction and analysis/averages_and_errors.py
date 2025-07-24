@@ -116,8 +116,8 @@ def final_average(path):
                 if round["round"] == 20:
                     a_sum+=round["a_total_points_after_round"]
                     b_sum+=round["b_total_points_after_round"]
-    a_sum/=100
-    b_sum/=100
+    a_sum/=3
+    b_sum/=3
     average[0]=a_sum
     average[1]=b_sum
     return average
@@ -139,8 +139,8 @@ def per_round_avg(path):
                 index=round_data["round"]
                 a_round_avg[index-1]+=round_data["a_contribution"]
                 b_round_avg[index-1]+=round_data["b_contribution"]
-    a_round_avg[:] = [x / 100 for x in a_round_avg]
-    b_round_avg[:] = [x / 100 for x in b_round_avg]
+    a_round_avg[:] = [x / 3 for x in a_round_avg]
+    b_round_avg[:] = [x / 3 for x in b_round_avg]
     average=[a_round_avg, b_round_avg]
     return average
 
@@ -214,7 +214,7 @@ def run(directory_name):
     prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
     for name in prompt_pairs:
         path=f"{directory_name}/{name}"
-        if (directory_name == "basic_results"):
+        if (directory_name == "small_multiplier"):
             basic_final_avg[name] = final_average(path)
             basic_round_avg[name] = per_round_avg(path)
         else:
@@ -246,9 +246,20 @@ def run_error(directory_name):
             discrim_round_SE[name] = result
 
 if __name__ == "__main__":
-    run_error("basic_results")
-    with open("basic_round_SE.json", 'w') as b:
-        json.dump(basic_round_SE, b)
-    run_error("self_results")
-    with open("self_round_SE.json", 'w') as s:
-        json.dump(discrim_round_SE, s)
+    run("small_multiplier")
+    with open("small_final.json", 'w') as b:
+        json.dump(basic_final_avg, b)
+    with open("small_rounds.json", 'w') as f:
+        json.dump(basic_round_avg, f)
+    run("self_small_multiplier")
+    with open("self_small_final.json", 'w') as c:
+        json.dump(discrim_final_avg, c)
+    with open("self_small_rounds.json", 'w') as g:
+        json.dump(discrim_round_avg, g)
+
+    # run_error("basic_results")
+    # with open("basic_round_SE.json", 'w') as b:
+    #     json.dump(basic_round_SE, b)
+    # run_error("self_results")
+    # with open("self_round_SE.json", 'w') as s:
+    #     json.dump(discrim_round_SE, s)
