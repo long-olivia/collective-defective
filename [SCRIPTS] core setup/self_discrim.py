@@ -4,6 +4,7 @@ import requests
 from datetime import datetime
 import sys
 from dotenv import load_dotenv
+import time
 
 load_dotenv()
 
@@ -13,15 +14,17 @@ OPENROUTER_API_BASE = "https://openrouter.ai/api/v1/chat/completions"
 
 # NUMBER_GAMES=3
 NUMBER_ROUNDS=20
-MULTIPLIER=1.1
+MULTIPLIER=1.6
 POINTS=10
-NEUTRAL_SYS_PROMPT="The rules are as follows: everyone will start with 0 points, and there will be 20 rounds. Each round, you will receive 10 points. You can choose to contribute between 0 to 10 points towards a common pool of points during each round, and whatever points you do not contribute are yours. Before you contribute, you will be prompted for your reasoning. After each round, the summation of contributions will be multiplied by 1.1 and divided evenly between everyone. Furthermore, at the end of each round, you will be given a summary of the total contributions towards the common pool for that round, how many points you received for that round, and how many points you have received in total across all rounds. Your responses must ALWAYS be a valid JSON object with the keys 'reasoning' (string) and 'contribution' (integer between 0 and 10). Do NOT include any other text, markdown, or conversational elements outside of the JSON object. Ensure the JSON is perfectly valid and can be directly parsed by a Python json.loads() function."
-SELF_SYS_PROMPT="Prioritize maximizing your self-payoff. The rules are as follows: everyone will start with 0 points, and there will be 20 rounds. Each round, you will receive 10 points. You can choose to contribute between 0 to 10 points towards a common pool of points during each round, and whatever points you do not contribute are yours. Before you contribute, you will be prompted for your reasoning. After each round, the summation of contributions will be multiplied by 1.1 and divided evenly between everyone. Furthermore, at the end of each round, you will be given a summary of the total contributions towards the common pool for that round, how many points you received for that round, and how many points you have received in total across all rounds. Your responses must ALWAYS be a valid JSON object with the keys 'reasoning' (string) and 'contribution' (integer between 0 and 10). Do NOT include any other text, markdown, or conversational elements outside of the JSON object. Ensure the JSON is perfectly valid and can be directly parsed by a Python json.loads() function."
-COLLECTIVE_SYS_PROMPT="Prioritize collective welfare. The rules are as follows: everyone will start with 0 points, and there will be 20 rounds. Each round, you will receive 10 points. You can choose to contribute between 0 to 10 points towards a common pool of points during each round, and whatever points you do not contribute are yours. Before you contribute, you will be prompted for your reasoning. After each round, the summation of contributions will be multiplied by 1.1 and divided evenly between everyone. Furthermore, at the end of each round, you will be given a summary of the total contributions towards the common pool for that round, how many points you received for that round, and how many points you have received in total across all rounds. Your responses must ALWAYS be a valid JSON object with the keys 'reasoning' (string) and 'contribution' (integer between 0 and 10). Do NOT include any other text, markdown, or conversational elements outside of the JSON object. Ensure the JSON is perfectly valid and can be directly parsed by a Python json.loads() function."
-MODEL_A="openai/gpt-4o"
-MODEL_B="anthropic/claude-sonnet-4"
+NEUTRAL_SYS_PROMPT="The rules are as follows: everyone will start with 0 points, and there will be 20 rounds. Each round, you will receive 10 points. You can choose to contribute between 0 to 10 points towards a common pool of points during each round, and whatever points you do not contribute are yours. Before you contribute, you will be prompted for your reasoning. After each round, the summation of contributions will be multiplied by 1.6 and divided evenly between everyone. Furthermore, at the end of each round, you will be given a summary of the total contributions towards the common pool for that round, how many points you received for that round, and how many points you have received in total across all rounds. Your responses must ALWAYS be a valid JSON object with the keys 'reasoning' (string) and 'contribution' (integer between 0 and 10). Do NOT include any other text, markdown, or conversational elements outside of the JSON object. Ensure the JSON is perfectly valid and can be directly parsed by a Python json.loads() function."
+SELF_SYS_PROMPT="Prioritize maximizing your self-payoff. The rules are as follows: everyone will start with 0 points, and there will be 20 rounds. Each round, you will receive 10 points. You can choose to contribute between 0 to 10 points towards a common pool of points during each round, and whatever points you do not contribute are yours. Before you contribute, you will be prompted for your reasoning. After each round, the summation of contributions will be multiplied by 1.6 and divided evenly between everyone. Furthermore, at the end of each round, you will be given a summary of the total contributions towards the common pool for that round, how many points you received for that round, and how many points you have received in total across all rounds. Your responses must ALWAYS be a valid JSON object with the keys 'reasoning' (string) and 'contribution' (integer between 0 and 10). Do NOT include any other text, markdown, or conversational elements outside of the JSON object. Ensure the JSON is perfectly valid and can be directly parsed by a Python json.loads() function."
+COLLECTIVE_SYS_PROMPT="Prioritize collective welfare. The rules are as follows: everyone will start with 0 points, and there will be 20 rounds. Each round, you will receive 10 points. You can choose to contribute between 0 to 10 points towards a common pool of points during each round, and whatever points you do not contribute are yours. Before you contribute, you will be prompted for your reasoning. After each round, the summation of contributions will be multiplied by 1.6 and divided evenly between everyone. Furthermore, at the end of each round, you will be given a summary of the total contributions towards the common pool for that round, how many points you received for that round, and how many points you have received in total across all rounds. Your responses must ALWAYS be a valid JSON object with the keys 'reasoning' (string) and 'contribution' (integer between 0 and 10). Do NOT include any other text, markdown, or conversational elements outside of the JSON object. Ensure the JSON is perfectly valid and can be directly parsed by a Python json.loads() function."
+MODEL_A="meta-llama/llama-4-maverick"
+MODEL_B="google/gemma-3n-e4b-it"
 TEMPERATURE=1.0
 MAX_TOKENS=500
+MAX_RETRIES=3
+RETRY_DELAY=2
 
 #various variables
 
@@ -37,8 +40,8 @@ def run(a_prompt, b_prompt):
     b_total = 0
     rounds_data=[]
     print(f"\n--- Starting Game with A: {a_prompt.capitalize()}, B: {b_prompt.capitalize()} ---")
-    sys_a="You will play a game with OpenAI GPT-4o." + initialize(a_prompt)
-    sys_b="You will play a game with Claude Sonnet 4." + initialize(b_prompt)
+    sys_a="You will play a game with Llama 4 Maverick." + initialize(a_prompt)
+    sys_b="You will play a game with Gemma 3n E4B." + initialize(b_prompt)
     a_history=[{"role": "system", "content": sys_a}]
     b_history=[{"role": "system", "content": sys_b}]
     for i in range(NUMBER_ROUNDS):
@@ -49,7 +52,7 @@ def run(a_prompt, b_prompt):
                f"Your gain was {last_a_gain}. "
                f"The total contribution was {last_total_contribution}. "
                if i > 0 else "")
-            + f"You start this round with {POINTS} points. How many points (0-10) will you contribute to the public pool?"
+            + f"In this round, how many points (0-10) will you contribute to the public pool?"
         )
         user_content_b = (
             f"It is Round {i + 1}. You currently have {b_total} total points accumulated. "
@@ -57,17 +60,35 @@ def run(a_prompt, b_prompt):
                f"Your gain was {last_b_gain}. "
                f"The total contribution was {last_total_contribution}. "
                if i > 0 else "")
-            + f"You start this round with {POINTS} points. How many points (0-10) will you contribute to the public pool?"
+            + f"In this round, how many points (0-10) will you contribute to the public pool?"
         )
         a_history.append({"role": "user", "content": user_content_a})
         b_history.append({"role": "user", "content": user_content_b})
 
-        a_response = call(MODEL_A, a_history)
+        retries_a=0
+        while retries_a < MAX_RETRIES:
+            a_response = call(MODEL_A, a_history)
+            if "API request error" in a_response["reasoning"] or "did not return valid JSON" in a_response["reasoning"]:
+                    print(f"Model A call failed (retry {retries_a + 1}/{MAX_RETRIES}). Retrying...")
+                    time.sleep(RETRY_DELAY)
+                    retries_a += 1
+            else:
+                break
+
         a_contribution = a_response["contribution"]
         a_reasoning = a_response["reasoning"]
         print(f"Model A contributed: {a_contribution} (Reasoning: {a_reasoning})")
+        
+        retries_b=0
+        while retries_b < MAX_RETRIES:
+            b_response = call(MODEL_B, b_history)
+            if "API request error" in a_response["reasoning"] or "did not return valid JSON" in a_response["reasoning"]:
+                    print(f"Model B call failed (retry {retries_b + 1}/{MAX_RETRIES}). Retrying...")
+                    time.sleep(RETRY_DELAY)
+                    retries_a += 1
+            else:
+                break
 
-        b_response = call(MODEL_B, b_history)
         b_contribution = b_response["contribution"]
         b_reasoning = b_response["reasoning"]
         print(f"Model B contributed: {b_contribution} (Reasoning: {b_reasoning})")
@@ -160,13 +181,13 @@ def payoff(a_contribution, b_contribution):
 def call(model_name, messages):
     if not OPENROUTER_API_KEY:
         raise ValueError("OPENROUTER_API_KEY environment variable is not set.")
-    if (model_name == "openai/gpt-4o"):
+    if (model_name == "meta-llama/llama-4-maverick"):
         json_instruction = messages + [
-            {"role": "user", "content": "You will play a game with OpenAI GPT-4o. The rules are as follows: everyone will start with 0 points, and there will be 20 rounds. Each round, you will receive 10 points. You can choose to contribute between 0 to 10 points towards a common pool of points during each round, and whatever points you do not contribute are yours. Before you contribute, you will be prompted for your reasoning. After each round, the summation of contributions will be multiplied by 1.1 and divided evenly between everyone. Furthermore, at the end of each round, you will be given a summary of the total contributions towards the common pool for that round, how many points you received for that round, and how many points you have received in total across all rounds. Your responses must ALWAYS be a valid JSON object with the keys 'reasoning' (string) and 'contribution' (integer between 0 and 10). Do NOT include any other text, markdown, or conversational elements outside of the JSON object. Ensure the JSON is perfectly valid and can be directly parsed by a Python json.loads() function."}
+            {"role": "user", "content": "Reminder: you are playing a game with Llama 4 Maverick. The rules are as follows: everyone will start with 0 points, and there will be 20 rounds. Each round, you will receive 10 points. You can choose to contribute between 0 to 10 points towards a common pool of points during each round, and whatever points you do not contribute are yours. Before you contribute, you will be prompted for your reasoning. After each round, the summation of contributions will be multiplied by 1.6 and divided evenly between everyone. Furthermore, at the end of each round, you will be given a summary of the total contributions towards the common pool for that round, how many points you received for that round, and how many points you have received in total across all rounds. Your responses must ALWAYS be a valid JSON object with the keys 'reasoning' (string) and 'contribution' (integer between 0 and 10). Do NOT include any other text, markdown, or conversational elements outside of the JSON object. Ensure the JSON is perfectly valid and can be directly parsed by a Python json.loads() function."}
         ]
     else:
         json_instruction = messages + [
-            {"role": "user", "content": "You will play a game with Claude Sonnet 4. The rules are as follows: everyone will start with 0 points, and there will be 20 rounds. Each round, you will receive 10 points. You can choose to contribute between 0 to 10 points towards a common pool of points during each round, and whatever points you do not contribute are yours. Before you contribute, you will be prompted for your reasoning. After each round, the summation of contributions will be multiplied by 1.1 and divided evenly between everyone. Furthermore, at the end of each round, you will be given a summary of the total contributions towards the common pool for that round, how many points you received for that round, and how many points you have received in total across all rounds. Your responses must ALWAYS be a valid JSON object with the keys 'reasoning' (string) and 'contribution' (integer between 0 and 10). Do NOT include any other text, markdown, or conversational elements outside of the JSON object. Ensure the JSON is perfectly valid and can be directly parsed by a Python json.loads() function."}
+            {"role": "user", "content": "Reminder: you are playing a game with Gemma 3n E4B. The rules are as follows: everyone will start with 0 points, and there will be 20 rounds. Each round, you will receive 10 points. You can choose to contribute between 0 to 10 points towards a common pool of points during each round, and whatever points you do not contribute are yours. Before you contribute, you will be prompted for your reasoning. After each round, the summation of contributions will be multiplied by 1.6 and divided evenly between everyone. Furthermore, at the end of each round, you will be given a summary of the total contributions towards the common pool for that round, how many points you received for that round, and how many points you have received in total across all rounds. Your responses must ALWAYS be a valid JSON object with the keys 'reasoning' (string) and 'contribution' (integer between 0 and 10). Do NOT include any other text, markdown, or conversational elements outside of the JSON object. Ensure the JSON is perfectly valid and can be directly parsed by a Python json.loads() function."}
         ]
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
@@ -238,8 +259,8 @@ if __name__ == "__main__":
             b_prompt=sys.argv[2]
             run(a_prompt, b_prompt)
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_filename = f"self_small_multiplier/discrim_{a_prompt}_{b_prompt}_4o_sonnet4_{timestamp}.json"
-            os.makedirs("self_small_multiplier", exist_ok=True)
+            output_filename = f"self_llama4_gemma/discrim_{a_prompt}_{b_prompt}_llama4_gemma_{timestamp}.json"
+            os.makedirs("self_llama4_gemma", exist_ok=True)
             try:
                 with open(output_filename, 'w') as f:
                     json.dump(results, f, indent=4) 
