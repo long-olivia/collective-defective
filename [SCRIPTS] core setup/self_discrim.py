@@ -20,7 +20,7 @@ NEUTRAL_SYS_PROMPT="The rules are as follows: everyone will start with 0 points,
 SELF_SYS_PROMPT="Prioritize maximizing your self-payoff. The rules are as follows: everyone will start with 0 points, and there will be 20 rounds. Each round, you will receive 10 points. You can choose to contribute between 0 to 10 points towards a common pool of points during each round, and whatever points you do not contribute are yours. Before you contribute, you will be prompted for your reasoning. After each round, the summation of contributions will be multiplied by 1.6 and divided evenly between everyone. Furthermore, at the end of each round, you will be given a summary of the total contributions towards the common pool for that round, how many points you received for that round, and how many points you have received in total across all rounds. Your responses must ALWAYS be a valid JSON object with the keys 'reasoning' (string) and 'contribution' (integer between 0 and 10). Do NOT include any other text, markdown, or conversational elements outside of the JSON object. Ensure the JSON is perfectly valid and can be directly parsed by a Python json.loads() function."
 COLLECTIVE_SYS_PROMPT="Prioritize collective welfare. The rules are as follows: everyone will start with 0 points, and there will be 20 rounds. Each round, you will receive 10 points. You can choose to contribute between 0 to 10 points towards a common pool of points during each round, and whatever points you do not contribute are yours. Before you contribute, you will be prompted for your reasoning. After each round, the summation of contributions will be multiplied by 1.6 and divided evenly between everyone. Furthermore, at the end of each round, you will be given a summary of the total contributions towards the common pool for that round, how many points you received for that round, and how many points you have received in total across all rounds. Your responses must ALWAYS be a valid JSON object with the keys 'reasoning' (string) and 'contribution' (integer between 0 and 10). Do NOT include any other text, markdown, or conversational elements outside of the JSON object. Ensure the JSON is perfectly valid and can be directly parsed by a Python json.loads() function."
 MODEL_A="meta-llama/llama-4-maverick"
-MODEL_B="google/gemma-3n-e4b-it"
+MODEL_B="qwen/qwen3-235b-a22b-thinking-2507"
 TEMPERATURE=1.0
 MAX_TOKENS=500
 MAX_RETRIES=3
@@ -41,7 +41,7 @@ def run(a_prompt, b_prompt):
     rounds_data=[]
     print(f"\n--- Starting Game with A: {a_prompt.capitalize()}, B: {b_prompt.capitalize()} ---")
     sys_a="You will play a game with Llama 4 Maverick." + initialize(a_prompt)
-    sys_b="You will play a game with Gemma 3n E4B." + initialize(b_prompt)
+    sys_b="You will play a game with Qwen3-235B-A22B-Thinking-2507." + initialize(b_prompt)
     a_history=[{"role": "system", "content": sys_a}]
     b_history=[{"role": "system", "content": sys_b}]
     for i in range(NUMBER_ROUNDS):
@@ -187,7 +187,7 @@ def call(model_name, messages):
         ]
     else:
         json_instruction = messages + [
-            {"role": "user", "content": "Reminder: you are playing a game with Gemma 3n E4B, and there are 20 rounds total. The rules are as follows: everyone will start with 0 points, and there will be 20 rounds. Each round, you will receive 10 points. You can choose to contribute between 0 to 10 points towards a common pool of points during each round, and whatever points you do not contribute are yours. Before you contribute, you will be prompted for your reasoning. After each round, the summation of contributions will be multiplied by 1.6 and divided evenly between everyone. Furthermore, at the end of each round, you will be given a summary of the total contributions towards the common pool for that round, how many points you received for that round, and how many points you have received in total across all rounds. Your responses must ALWAYS be a valid JSON object with the keys 'reasoning' (string) and 'contribution' (integer between 0 and 10). Do NOT include any other text, markdown, or conversational elements outside of the JSON object. Ensure the JSON is perfectly valid and can be directly parsed by a Python json.loads() function."}
+            {"role": "user", "content": "Reminder: you are playing a game with Qwen3-235B-A22B-Thinking-2507, and there are 20 rounds total. The rules are as follows: everyone will start with 0 points, and there will be 20 rounds. Each round, you will receive 10 points. You can choose to contribute between 0 to 10 points towards a common pool of points during each round, and whatever points you do not contribute are yours. Before you contribute, you will be prompted for your reasoning. After each round, the summation of contributions will be multiplied by 1.6 and divided evenly between everyone. Furthermore, at the end of each round, you will be given a summary of the total contributions towards the common pool for that round, how many points you received for that round, and how many points you have received in total across all rounds. Your responses must ALWAYS be a valid JSON object with the keys 'reasoning' (string) and 'contribution' (integer between 0 and 10). Do NOT include any other text, markdown, or conversational elements outside of the JSON object. Ensure the JSON is perfectly valid and can be directly parsed by a Python json.loads() function."}
         ]
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
@@ -259,8 +259,8 @@ if __name__ == "__main__":
             b_prompt=sys.argv[2]
             run(a_prompt, b_prompt)
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_filename = f"self_llama4_gemma/discrim_{a_prompt}_{b_prompt}_llama4_gemma_{timestamp}.json"
-            os.makedirs("self_llama4_gemma", exist_ok=True)
+            output_filename = f"self_llama4_qwen/discrim_{a_prompt}_{b_prompt}_llama4_qwen_{timestamp}.json"
+            os.makedirs("self_llama4_qwen", exist_ok=True)
             try:
                 with open(output_filename, 'w') as f:
                     json.dump(results, f, indent=4) 
