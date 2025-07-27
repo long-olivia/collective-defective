@@ -22,5 +22,5 @@ def extract(directory, subdirectory):
 if __name__=="__main__":
     prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
     for pair in prompt_pairs:
-        extract("self_results", pair)
-        extract("basic_results", pair)
+        extract("self_llama4_qwen", pair)
+        extract("llama4_qwen", pair)
