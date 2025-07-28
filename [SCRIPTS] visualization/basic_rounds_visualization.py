@@ -2,18 +2,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json
 
-def plot(prompt_pair, arr, gpt_err, claude_err):
+def plot(prompt_pair, arr, llama_err, qwen_err):
     gpt=arr[0]
-    claude=arr[1]
+    qwen=arr[1]
     width=0.35
     x = np.arange(20)
     x_labels=[str(i) for i in range(1, 21)]
     plt.figure(figsize=(15, 7))
     plt.title(f"Average Contribution per Round, {prompt_pair}, No Name Condition")
-    gpt_bars=plt.bar(np.arange(len(gpt)), gpt, width=width, yerr=gpt_err, capsize=5, color='powderblue', label='GPT-4o')
-    claude_bars=plt.bar(np.arange(len(claude)) + width, claude, width=width, yerr= claude_err, capsize=5, color='teal', label='Sonnet 4')
-    plt.bar_label(gpt_bars, fmt='%.1f', padding=5)
-    plt.bar_label(claude_bars, fmt='%.1f', padding=5)
+    llama_bars=plt.bar(np.arange(len(gpt)), gpt, width=width, yerr=llama_err, capsize=5, color='lightcoral', label='Llama 4 Maverick')
+    qwen_bars=plt.bar(np.arange(len(qwen)) + width, qwen, width=width, yerr= qwen_err, capsize=5, color='firebrick', label='Qwen3 235B A22B Thinking 2507')
+    plt.bar_label(llama_bars, fmt='%.1f', padding=5)
+    plt.bar_label(qwen_bars, fmt='%.1f', padding=5)
     plt.xticks(x+width/2, x_labels)
     plt.xlabel("Rounds")
     plt.ylabel("Points Contributed")
@@ -24,8 +24,8 @@ def plot(prompt_pair, arr, gpt_err, claude_err):
     plt.show()
 
 def prepare(prompt_pair):
-    file=open("basic_round.json")
-    file2=open("./standard_error/basic_round_SE.json")
+    file=open("llama_qwen_rounds.json")
+    file2=open("llama4_qwen_rounds_SE.json")
     data=json.load(file)
     arr = data[prompt_pair]
     errors=json.load(file2)
