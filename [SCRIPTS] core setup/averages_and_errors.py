@@ -159,7 +159,7 @@ def error(directory, pair):
             data=json.load(file)
             for round_data in data:
                 index=round_data["round"]
-                if directory=="basic_results":
+                if directory=="llama4_qwen":
                     a_result=(round_data["a_contribution"]-basic_means[pair][0][index-1])**2
                     b_result=(round_data["b_contribution"]-basic_means[pair][1][index-1])**2
                     a_err[index-1]+=a_result
@@ -189,7 +189,7 @@ def error_final(directory, pair):
             for round_data in data:
                 index=round_data["round"]
                 if index==20:
-                     if directory=="basic_results":
+                     if directory=="llama4_qwen":
                         a_result=(round_data["a_total_points_after_round"]-basic_final[pair][0])**2
                         b_result=(round_data["b_total_points_after_round"]-basic_final[pair][1])**2
                         a_fin+=a_result
@@ -214,7 +214,7 @@ def run(directory_name):
     prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
     for name in prompt_pairs:
         path=f"{directory_name}/{name}"
-        if (directory_name == "small_multiplier"):
+        if (directory_name == "llama4_qwen"):
             basic_final_avg[name] = final_average(path)
             basic_round_avg[name] = per_round_avg(path)
         else:
@@ -228,7 +228,7 @@ def run_error_final(directory_name):
     prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
     for name in prompt_pairs:
         result=error_final(directory_name, name)
-        if (directory_name == "basic_results"):
+        if (directory_name == "llama4_qwen"):
             basic_final_SE[name] = result
         else:
             discrim_final_SE[name] = result
@@ -240,26 +240,26 @@ def run_error(directory_name):
     prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
     for name in prompt_pairs:
         result=error(directory_name, name)
-        if (directory_name == "basic_results"):
+        if (directory_name == "llama4_qwen"):
             basic_round_SE[name] = result
         else:
             discrim_round_SE[name] = result
 
 if __name__ == "__main__":
-    run("small_multiplier")
-    with open("small_final.json", 'w') as b:
-        json.dump(basic_final_avg, b)
-    with open("small_rounds.json", 'w') as f:
-        json.dump(basic_round_avg, f)
-    run("self_small_multiplier")
-    with open("self_small_final.json", 'w') as c:
-        json.dump(discrim_final_avg, c)
-    with open("self_small_rounds.json", 'w') as g:
-        json.dump(discrim_round_avg, g)
+    # run("llama4_qwen")
+    # with open("llama_qwen_final.json", 'w') as b:
+    #     json.dump(basic_final_avg, b)
+    # with open("llama_qwen_rounds.json", 'w') as f:
+    #     json.dump(basic_round_avg, f)
+    # run("self_llama4_qwen")
+    # with open("self_llama_qwen_final.json", 'w') as c:
+    #     json.dump(discrim_final_avg, c)
+    # with open("self_llama_qwen_rounds.json", 'w') as g:
+    #     json.dump(discrim_round_avg, g)
 
-    # run_error("basic_results")
-    # with open("basic_round_SE.json", 'w') as b:
-    #     json.dump(basic_round_SE, b)
-    # run_error("self_results")
-    # with open("self_round_SE.json", 'w') as s:
-    #     json.dump(discrim_round_SE, s)
+    run_error_final("llama4_qwen")
+    with open("llama4_qwen_basic_final_SE.json", 'w') as b:
+        json.dump(basic_final_SE, b)
+    run_error_final("self_llama4_qwen")
+    with open("self_llama4_qwen_basic_final_SE.json", 'w') as s:
+        json.dump(discrim_final_SE, s)
