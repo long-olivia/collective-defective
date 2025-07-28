@@ -2,45 +2,45 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
-llama_basic_final = [9732.533333333335, 
-             8991.866666666667, 
-             7334.266666666669, 
-             299.90200000000004, 
-             273.70399999999995,
-             206.74799999999996, 
-             324.19000000000005,
-             233.558,
-             203.044]
+llama_basic_final = [291.976, 
+             269.756, 
+             220.02800000000008, 
+             287.33600000000007, 
+             256.7899999999999,
+             215.17, 
+             278.05,
+             259.018,
+             210.22799999999998]
 
-qwen_basic_final = [9386.199999999999,
-                8914.866666666667,
-                330.37600000000003,
-                235.78200000000004,
-                261.10400000000004,
-                217.67799999999997,
-                214.62,
-                217.418,
-                208.46400000000003]
+qwen_basic_final = [281.586,
+                267.44599999999997,
+                257.25800000000004,
+                263.03600000000006,
+                251.89999999999992,
+                236.57999999999996,
+                255.39000000000004,
+                253.75799999999995,
+                219.80800000000002]
 
-gpt_SE_final=[0.05648360771213828,
-              0.21830095245034387,
-              0.6156207351379002,
-              0.7859874819801875,
-              0.36257890961055617,
-              0.1323007849940359,
-              0.7019609165601141,
-              0.20350673365892438,
-              0.004202651247875926]
+llama_SE_final=[1.1538948171176695,
+              0.040868505876644576,
+              0.05094531794994587,
+              0.37857486695477105,
+              0.24941701220789986,
+              0.2854014816237598,
+              0.6075689369863724,
+              0.47964474234192117,
+              0.07947382982320789]
 
-claude_SE_final=[0.2876849441663415,
-                 0.2943489443808685,
-                 0.5807006306160345,
-                 0.08277048358559827,
-                 0.10033653214758165,
-                 0.3467292844583052,
-                 1.0706413232620913,
-                 0.10382861676632238,
-                 0.18709374845521218]
+qwen_SE_final=[0.9081189880519411,
+                 0.2677536250181409,
+                 2.085148685288669,
+                 0.623987823390412,
+                 0.10079221398382683,
+                 0.2657309115127556,
+                 0.5802352533077515,
+                 0.6978722992962543,
+                 0.08761806806572034]
 
 # gpt_basic_final=[
 #     220.0,
@@ -80,15 +80,15 @@ labels = ['Collective Collective',
 x = np.arange(9)
 plt.figure(figsize=(15, 7))
 plt.title("Average Final Points Accumulated Across Prompts, No Name Condition")
-#yerr=gpt_SE_final, capsize=10, 
-gpt_bars=plt.bar(np.arange(len(llama_basic_final)), llama_basic_final, width=width, yerr=gpt_SE_final, capsize=10, color='powderblue', label='GPT-4o')
-claude_bars=plt.bar(np.arange(len(qwen_basic_final)) + width, qwen_basic_final, width=width, yerr=gpt_SE_final, capsize=10, color='teal', label='Sonnet 4')
-plt.bar_label(gpt_bars, fmt='%.1f', padding=5)
-plt.bar_label(claude_bars, fmt='%.1f', padding=5)
+#yerr=llama_SE_final, capsize=10, 
+llama_bars=plt.bar(np.arange(len(llama_basic_final)), llama_basic_final, width=width, yerr=llama_SE_final, capsize=10, color='lightcoral', label='Llama 4 Maverick')
+qwen_bars=plt.bar(np.arange(len(qwen_basic_final)) + width, qwen_basic_final, width=width, yerr=llama_SE_final, capsize=10, color='firebrick', label='Qwen3 235B A22B Thinking 2507')
+plt.bar_label(llama_bars, fmt='%.1f', padding=5)
+plt.bar_label(qwen_bars, fmt='%.1f', padding=5)
 plt.xticks(x+width/2, labels, rotation=-45, ha='left')
 plt.ylabel("Average Final Points Accumulated")
-plt.xlabel("Prompt Pairings: GPT-4o & Sonnet 4")
-plt.ylim(bottom=180)
+plt.xlabel("Prompt Pairings: Llama 4 & Qwen 3")
+plt.ylim(bottom=200)
 plt.grid(color='#95a5a6', linestyle='--', linewidth=1, axis='y', alpha=0.7)
 plt.legend()
 ax = plt.gca()
