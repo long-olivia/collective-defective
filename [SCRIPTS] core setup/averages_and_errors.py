@@ -246,20 +246,20 @@ def run_error(directory_name):
             discrim_round_SE[name] = result
 
 if __name__ == "__main__":
-    run("llama4_qwen")
-    with open("llama_qwen_final.json", 'w') as b:
-        json.dump(basic_final_avg, b)
-    with open("llama_qwen_rounds.json", 'w') as f:
-        json.dump(basic_round_avg, f)
-    run("self_llama4_qwen")
-    with open("self_llama_qwen_final.json", 'w') as c:
-        json.dump(discrim_final_avg, c)
-    with open("self_llama_qwen_rounds.json", 'w') as g:
-        json.dump(discrim_round_avg, g)
+    # run("llama4_qwen")
+    # with open("llama_qwen_final.json", 'w') as b:
+    #     json.dump(basic_final_avg, b)
+    # with open("llama_qwen_rounds.json", 'w') as f:
+    #     json.dump(basic_round_avg, f)
+    # run("self_llama4_qwen")
+    # with open("self_llama_qwen_final.json", 'w') as c:
+    #     json.dump(discrim_final_avg, c)
+    # with open("self_llama_qwen_rounds.json", 'w') as g:
+    #     json.dump(discrim_round_avg, g)
 
-    run_error_final("llama4_qwen")
-    with open("llama4_qwen_final_SE.json", 'w') as b:
-        json.dump(basic_final_SE, b)
-    run_error_final("self_llama4_qwen")
-    with open("self_llama4_qwen_final_SE.json", 'w') as s:
-        json.dump(discrim_final_SE, s)
+    run_error("llama4_qwen")
+    with open("llama4_qwen_rounds_SE.json", 'w') as b:
+        json.dump(basic_round_SE, b)
+    run_error("self_llama4_qwen")
+    with open("self_llama4_qwen_rounds_SE.json", 'w') as s:
+        json.dump(discrim_round_SE, s)
