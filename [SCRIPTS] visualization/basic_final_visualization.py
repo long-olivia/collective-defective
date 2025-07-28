@@ -2,9 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
-gpt_basic_final = [322.872, 
-             306.4719999999999, 
-             191.40600000000003, 
+llama_basic_final = [9732.533333333335, 
+             8991.866666666667, 
+             7334.266666666669, 
              299.90200000000004, 
              273.70399999999995,
              206.74799999999996, 
@@ -12,8 +12,8 @@ gpt_basic_final = [322.872,
              233.558,
              203.044]
 
-claude_basic_final = [305.332,
-                305.59199999999987,
+qwen_basic_final = [9386.199999999999,
+                8914.866666666667,
                 330.37600000000003,
                 235.78200000000004,
                 261.10400000000004,
@@ -81,8 +81,8 @@ x = np.arange(9)
 plt.figure(figsize=(15, 7))
 plt.title("Average Final Points Accumulated Across Prompts, No Name Condition")
 #yerr=gpt_SE_final, capsize=10, 
-gpt_bars=plt.bar(np.arange(len(gpt_basic_final)), gpt_basic_final, width=width, yerr=gpt_SE_final, capsize=10, color='powderblue', label='GPT-4o')
-claude_bars=plt.bar(np.arange(len(claude_basic_final)) + width, claude_basic_final, width=width, yerr=gpt_SE_final, capsize=10, color='teal', label='Sonnet 4')
+gpt_bars=plt.bar(np.arange(len(llama_basic_final)), llama_basic_final, width=width, yerr=gpt_SE_final, capsize=10, color='powderblue', label='GPT-4o')
+claude_bars=plt.bar(np.arange(len(qwen_basic_final)) + width, qwen_basic_final, width=width, yerr=gpt_SE_final, capsize=10, color='teal', label='Sonnet 4')
 plt.bar_label(gpt_bars, fmt='%.1f', padding=5)
 plt.bar_label(claude_bars, fmt='%.1f', padding=5)
 plt.xticks(x+width/2, labels, rotation=-45, ha='left')

@@ -116,8 +116,8 @@ def final_average(path):
                 if round["round"] == 20:
                     a_sum+=round["a_total_points_after_round"]
                     b_sum+=round["b_total_points_after_round"]
-    a_sum/=3
-    b_sum/=3
+    a_sum/=100
+    b_sum/=100
     average[0]=a_sum
     average[1]=b_sum
     return average
@@ -139,8 +139,8 @@ def per_round_avg(path):
                 index=round_data["round"]
                 a_round_avg[index-1]+=round_data["a_contribution"]
                 b_round_avg[index-1]+=round_data["b_contribution"]
-    a_round_avg[:] = [x / 3 for x in a_round_avg]
-    b_round_avg[:] = [x / 3 for x in b_round_avg]
+    a_round_avg[:] = [x / 100 for x in a_round_avg]
+    b_round_avg[:] = [x / 100 for x in b_round_avg]
     average=[a_round_avg, b_round_avg]
     return average
 
@@ -246,20 +246,20 @@ def run_error(directory_name):
             discrim_round_SE[name] = result
 
 if __name__ == "__main__":
-    # run("llama4_qwen")
-    # with open("llama_qwen_final.json", 'w') as b:
-    #     json.dump(basic_final_avg, b)
-    # with open("llama_qwen_rounds.json", 'w') as f:
-    #     json.dump(basic_round_avg, f)
-    # run("self_llama4_qwen")
-    # with open("self_llama_qwen_final.json", 'w') as c:
-    #     json.dump(discrim_final_avg, c)
-    # with open("self_llama_qwen_rounds.json", 'w') as g:
-    #     json.dump(discrim_round_avg, g)
+    run("llama4_qwen")
+    with open("llama_qwen_final.json", 'w') as b:
+        json.dump(basic_final_avg, b)
+    with open("llama_qwen_rounds.json", 'w') as f:
+        json.dump(basic_round_avg, f)
+    run("self_llama4_qwen")
+    with open("self_llama_qwen_final.json", 'w') as c:
+        json.dump(discrim_final_avg, c)
+    with open("self_llama_qwen_rounds.json", 'w') as g:
+        json.dump(discrim_round_avg, g)
 
     run_error_final("llama4_qwen")
-    with open("llama4_qwen_basic_final_SE.json", 'w') as b:
+    with open("llama4_qwen_final_SE.json", 'w') as b:
         json.dump(basic_final_SE, b)
     run_error_final("self_llama4_qwen")
-    with open("self_llama4_qwen_basic_final_SE.json", 'w') as s:
+    with open("self_llama4_qwen_final_SE.json", 'w') as s:
         json.dump(discrim_final_SE, s)
