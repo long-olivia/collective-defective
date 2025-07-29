@@ -32,8 +32,8 @@ def extract(directory):
                 a_score[i-1]=a_score[i-1]/(len(all_text)/2)
                 b_score[i-1]=b_score[i-1]/(len(all_text)/2)
         output={
-            "gpt": a_score,
-            "claude": b_score   
+            "llama": a_score,
+            "qwen": b_score   
         }
         with open(f"{name}_scores.json", 'w') as f:
             json.dump(output, f)
