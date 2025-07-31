@@ -246,14 +246,14 @@ if __name__ == "__main__":
         print("Error: OPENROUTER_API_KEY environment variable is not set.")
     else:
         if len(sys.argv) < 3:
-            print("Usage: python self_discrim.py <a_prompt> <b_prompt>")
+            print("Usage: python rephrased_discrim.py <a_prompt> <b_prompt>")
         else:
             a_prompt=sys.argv[1]
             b_prompt=sys.argv[2]
             run(a_prompt, b_prompt)
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_filename = f"self_llama4_qwen/discrim_{a_prompt}_{b_prompt}_llama4_qwen_{timestamp}.json"
-            os.makedirs("self_llama4_qwen", exist_ok=True)
+            output_filename = f"self_gpt_claude_results/discrim_{a_prompt}_{b_prompt}_gpt_claude_{timestamp}.json"
+            os.makedirs("self_gpt_claude_results", exist_ok=True)
             try:
                 with open(output_filename, 'w') as f:
                     json.dump(results, f, indent=4) 
