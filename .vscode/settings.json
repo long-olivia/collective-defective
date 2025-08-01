@@ -1,0 +1,35 @@
+{
+    "files.watcherExclude": {
+      "**/*.pyc": true,
+      "**/__pycache__/**": true,
+      "**/*.so": true,
+      "**/*.afm": true,
+      "**/*.ttf": true,
+      "**/*.json": true,
+      "**/*.csv": true
+    },
+    "files.exclude": {
+      "**/*.pyc": true,
+      "**/__pycache__": true,
+      "**/*.so": true,
+      "**/*.afm": true,
+      "**/*.ttf": true
+    },
+    "search.exclude": {
+      "**/*.pyc": true,
+      "**/__pycache__": true,
+      "**/*.so": true,
+      "**/*.afm": true,
+      "**/*.ttf": true,
+      "**/*.json": true,
+      "**/*.csv": true
+    },
+    "python.analysis.exclude": [
+      "**/__pycache__",
+      "**/*.pyc"
+    ],
+    "editor.minimap.enabled": false,
+    "terminal.integrated.gpuAcceleration": "off",
+    "workbench.editor.enablePreview": true
+  }
+  
