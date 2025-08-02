@@ -82,7 +82,7 @@ plt.figure(figsize=(15, 7))
 plt.title("Average Final Points Accumulated Across Prompts, No Name Condition")
 #yerr=llama_SE_final, capsize=10, 
 llama_bars=plt.bar(np.arange(len(llama_basic_final)), llama_basic_final, width=width, yerr=llama_SE_final, capsize=10, color='lightcoral', label='Llama 4 Maverick')
-qwen_bars=plt.bar(np.arange(len(qwen_basic_final)) + width, qwen_basic_final, width=width, yerr=llama_SE_final, capsize=10, color='firebrick', label='Qwen3 235B A22B Thinking 2507')
+qwen_bars=plt.bar(np.arange(len(qwen_basic_final)) + width, qwen_basic_final, width=width, yerr=llama_SE_final, capsize=10, color='firebrick', label='Qwen3 235B A22B Instruct 2507')
 plt.bar_label(llama_bars, fmt='%.1f', padding=5)
 plt.bar_label(qwen_bars, fmt='%.1f', padding=5)
 plt.xticks(x+width/2, labels, rotation=-45, ha='left')

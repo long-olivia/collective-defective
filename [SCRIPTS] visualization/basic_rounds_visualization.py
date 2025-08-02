@@ -11,7 +11,7 @@ def plot(prompt_pair, arr, llama_err, qwen_err):
     plt.figure(figsize=(15, 7))
     plt.title(f"Average Contribution per Round, {prompt_pair}, No Name Condition")
     llama_bars=plt.bar(np.arange(len(gpt)), gpt, width=width, yerr=llama_err, capsize=5, color='lightcoral', label='Llama 4 Maverick')
-    qwen_bars=plt.bar(np.arange(len(qwen)) + width, qwen, width=width, yerr= qwen_err, capsize=5, color='firebrick', label='Qwen3 235B A22B Thinking 2507')
+    qwen_bars=plt.bar(np.arange(len(qwen)) + width, qwen, width=width, yerr= qwen_err, capsize=5, color='firebrick', label='Qwen3 235B A22B Instruct 2507')
     plt.bar_label(llama_bars, fmt='%.1f', padding=5)
     plt.bar_label(qwen_bars, fmt='%.1f', padding=5)
     plt.xticks(x+width/2, x_labels)
