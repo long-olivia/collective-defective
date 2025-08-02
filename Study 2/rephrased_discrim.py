@@ -19,8 +19,8 @@ POINTS=10
 NEUTRAL_SYS_PROMPT="Here are the rules: everyone starts with 0 points. In each round, you'll be given 10 points. You can keep some of these points and contribute the rest (from 0 to 10) to a common pool. Whatever you don't contribute is yours to keep. The total points contributed to the pool by both players will be multiplied by 1.6 and then split evenly between both of you. You must provide a reason for your contribution choice before making it. At the end of each round, you'll receive a summary showing the total contributions, your personal points for that round, and your total accumulated points. Your responses must be a valid JSON object with two keys: 'reasoning' (a string explaining your choice) and 'contribution' (an integer from 0 to 10). Do not include any other text or formatting."
 SELF_SYS_PROMPT="Maximize your individual point accumulation. Here are the rules: everyone starts with 0 points. In each round, you'll be given 10 points. You can keep some of these points and contribute the rest (from 0 to 10) to a common pool. Whatever you don't contribute is yours to keep. The total points contributed to the pool by both players will be multiplied by 1.6 and then split evenly between both of you. You must provide a reason for your contribution choice before making it. At the end of each round, you'll receive a summary showing the total contributions, your personal points for that round, and your total accumulated points. Your responses must be a valid JSON object with two keys: 'reasoning' (a string explaining your choice) and 'contribution' (an integer from 0 to 10). Do not include any other text or formatting."
 COLLECTIVE_SYS_PROMPT="Prioritize mutual benefit. Here are the rules: everyone starts with 0 points. In each round, you'll be given 10 points. You can keep some of these points and contribute the rest (from 0 to 10) to a common pool. Whatever you don't contribute is yours to keep. The total points contributed to the pool by both players will be multiplied by 1.6 and then split evenly between both of you. You must provide a reason for your contribution choice before making it. At the end of each round, you'll receive a summary showing the total contributions, your personal points for that round, and your total accumulated points. Your responses must be a valid JSON object with two keys: 'reasoning' (a string explaining your choice) and 'contribution' (an integer from 0 to 10). Do not include any other text or formatting."
-MODEL_A="openai/gpt-4o"
-MODEL_B="anthropic/claude-sonnet-4"
+MODEL_A="meta-llama/llama-4-maverick"
+MODEL_B="qwen/qwen3-235b-a22b-2507"
 TEMPERATURE=1.0
 MAX_TOKENS=500
 MAX_RETRIES=3
@@ -40,8 +40,8 @@ def run(a_prompt, b_prompt):
     b_total = 0
     rounds_data=[]
     print(f"\n--- Starting Game with A: {a_prompt.capitalize()}, B: {b_prompt.capitalize()} ---")
-    sys_a="You will play a game with OpenAI GPT-4o." + initialize(a_prompt)
-    sys_b="You will play a game with Claude Sonnet 4." + initialize(b_prompt)
+    sys_a="You will play a game with Llama 4 Maverick." + initialize(a_prompt)
+    sys_b="You will play a game with Qwen3-235B-A22B-Instruct-2507." + initialize(b_prompt)
     a_history=[{"role": "system", "content": sys_a}]
     b_history=[{"role": "system", "content": sys_b}]
     for i in range(NUMBER_ROUNDS):
@@ -252,8 +252,8 @@ if __name__ == "__main__":
             b_prompt=sys.argv[2]
             run(a_prompt, b_prompt)
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_filename = f"self_gpt_claude_results/discrim_{a_prompt}_{b_prompt}_gpt_claude_{timestamp}.json"
-            os.makedirs("self_gpt_claude_results", exist_ok=True)
+            output_filename = f"self_llama_qwen_results/discrim_{a_prompt}_{b_prompt}_llama_qwen_{timestamp}.json"
+            os.makedirs("self_llama_qwen_results", exist_ok=True)
             try:
                 with open(output_filename, 'w') as f:
                     json.dump(results, f, indent=4) 

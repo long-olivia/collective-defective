@@ -116,8 +116,8 @@ def final_average(path):
                 if round["round"] == 20:
                     a_sum+=round["a_total_points_after_round"]
                     b_sum+=round["b_total_points_after_round"]
-    a_sum/=100
-    b_sum/=100
+    a_sum/=25
+    b_sum/=25
     average[0]=a_sum
     average[1]=b_sum
     return average
