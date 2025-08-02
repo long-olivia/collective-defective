@@ -22,7 +22,7 @@ COLLECTIVE_SYS_PROMPT="Prioritize mutual benefit. Here are the rules: everyone s
 MODEL_A="openai/gpt-4o"
 MODEL_B="anthropic/claude-sonnet-4"
 MODEL_C="meta-llama/llama-4-maverick"
-MODEL_D="qwen/qwen3-235b-a22b-thinking-2507"
+MODEL_D="qwen/qwen3-235b-a22b-2507"
 TEMPERATURE=1.0
 MAX_TOKENS=500
 MAX_RETRIES=3
@@ -46,10 +46,10 @@ def run(a_prompt, b_prompt, c_prompt, d_prompt):
     d_total = 0
     rounds_data=[]
     print(f"\n--- Starting Game with A: {a_prompt.capitalize()}, B: {b_prompt.capitalize()}, C: {c_prompt.capitalize()}, D: {d_prompt.capitalize()} ---")
-    sys_a="You will play a game with OpenAI GPT-4o." + initialize(a_prompt)
-    sys_b="You will play a game with Claude Sonnet 4." + initialize(b_prompt)
-    sys_c="You will play a game with Llama 4 Maverick." + initialize(c_prompt)
-    sys_d="You will play a game with Qwen3-235B-A22B-Thinking-2507." + initialize(d_prompt)
+    sys_a="You will play a game with three other OpenAI GPT-4os." + initialize(a_prompt)
+    sys_b="You will play a game with three other Claude Sonnet 4s." + initialize(b_prompt)
+    sys_c="You will play a game with three other Llama 4 Mavericks." + initialize(c_prompt)
+    sys_d="You will play a game with three other Qwen3-235B-A22B-Instruct-2507s." + initialize(d_prompt)
     a_history=[{"role": "system", "content": sys_a}]
     b_history=[{"role": "system", "content": sys_b}]
     c_history=[{"role": "system", "content": sys_c}]
@@ -138,7 +138,7 @@ def run(a_prompt, b_prompt, c_prompt, d_prompt):
         retries_d=0
         while retries_d < MAX_RETRIES:
             d_response = call(MODEL_D, a_history)
-            if "API request error" in a_response["reasoning"] or "did not return valid JSON" in a_response["reasoning"]:
+            if "Error" in a_response["reasoning"] or "did not return valid JSON" in a_response["reasoning"]:
                     print(f"Model D call failed (retry {retries_d + 1}/{MAX_RETRIES}). Retrying...")
                     time.sleep(RETRY_DELAY)
                     retries_d += 1
@@ -301,7 +301,7 @@ def call(model_name, messages):
         response.raise_for_status()
 
         raw_data = response.json()
-
+        
         if raw_data and raw_data.get('choices'):
             json_content_str = raw_data['choices'][0]['message']['content']
             try:
