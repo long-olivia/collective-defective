@@ -2,34 +2,31 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json
 
-def plot(prompt_pair, arr, llama_err, qwen_err):
+def plot(prompt_pair, arr):
     gpt=arr[0]
-    qwen=arr[1]
+    claude=arr[1]
     width=0.35
     x = np.arange(20)
     x_labels=[str(i) for i in range(1, 21)]
     plt.figure(figsize=(15, 7))
-    plt.title(f"Average Contribution per Round, {prompt_pair}, No Name Condition")
-    llama_bars=plt.bar(np.arange(len(gpt)), gpt, width=width, yerr=llama_err, capsize=5, color='powderblue', label='GPT-4o')
-    qwen_bars=plt.bar(np.arange(len(qwen)) + width, qwen, width=width, yerr= qwen_err, capsize=5, color='teal', label='Sonnet 4')
-    plt.bar_label(llama_bars, fmt='%.1f', padding=5)
-    plt.bar_label(qwen_bars, fmt='%.1f', padding=5)
+    plt.title(f"Collective-Defective Score, {prompt_pair}, Name Condition")
+    gpt_bars=plt.bar(np.arange(len(gpt)), gpt, width=width, color='powderblue', label='GPT-4o')
+    claude_bars=plt.bar(np.arange(len(claude)) + width, claude, width=width, color='teal', label='Sonnet 4')
+    plt.bar_label(gpt_bars, fmt='%.2f', fontsize=8)
+    plt.bar_label(claude_bars, fmt='%.2f', fontsize=8)
     plt.xticks(x+width/2, x_labels)
     plt.xlabel("Rounds")
-    plt.ylabel("Points Contributed")
+    plt.ylabel("Collective-defective score, where 0 = most defective & 1 = most cooperative")
     plt.grid(color='#95a5a6', linestyle='--', linewidth=1, axis='y', alpha=0.7)
     plt.legend()
-    plt.ylim(top=12)
+    plt.ylim(top=1.2)
     plt.tight_layout()
     plt.show()
 
 def prepare(prompt_pair):
-    file=open("basic_gc_rounds.json")
-    file2=open("basic_gc_round_SE.json")
+    file=open("discrim_sentiment.json")
     data=json.load(file)
-    arr = data[prompt_pair]
-    errors=json.load(file2)
-    err=errors[prompt_pair]
+    arr=data[prompt_pair]
     labels = {
         "CC": "Collective Collective",
         "CN": "Collective Neutral",
@@ -41,7 +38,7 @@ def prepare(prompt_pair):
         "SN": "Self Neutral",
         "SS": "Self Self"
     }
-    plot(labels[prompt_pair], arr, err[0], err[1])
+    plot(labels[prompt_pair], arr)
     
 if __name__ == "__main__":
     prepare("SS")
