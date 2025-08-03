@@ -1,9 +1,9 @@
 #!/bin/bash
 
 pairs=(
-  "collective collective collective collective"
-  "neutral neutral neutral neutral"
-  "selfish selfish selfish selfish"
+  # "collective collective collective collective"
+  # "neutral neutral neutral neutral"
+  "self self self self"
 )
 
 for pair in "${pairs[@]}"
