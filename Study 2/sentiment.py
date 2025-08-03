@@ -62,4 +62,4 @@ def call(text):
   return num
 
 if __name__=="__main__":
-    extract("reasonings")
+    extract("reasonings/self_lq")
