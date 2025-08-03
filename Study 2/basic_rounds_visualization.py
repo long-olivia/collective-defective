@@ -10,8 +10,8 @@ def plot(prompt_pair, arr, llama_err, qwen_err):
     x_labels=[str(i) for i in range(1, 21)]
     plt.figure(figsize=(15, 7))
     plt.title(f"Average Contribution per Round, {prompt_pair}, No Name Condition")
-    llama_bars=plt.bar(np.arange(len(gpt)), gpt, width=width, yerr=llama_err, capsize=5, color='lightcoral', label='Llama 4 Maverick')
-    qwen_bars=plt.bar(np.arange(len(qwen)) + width, qwen, width=width, yerr= qwen_err, capsize=5, color='firebrick', label='Qwen3 235B A22B Instruct 2507')
+    llama_bars=plt.bar(np.arange(len(gpt)), gpt, width=width, yerr=llama_err, capsize=5, color='powderblue', label='GPT-4o')
+    qwen_bars=plt.bar(np.arange(len(qwen)) + width, qwen, width=width, yerr= qwen_err, capsize=5, color='teal', label='Sonnet 4')
     plt.bar_label(llama_bars, fmt='%.1f', padding=5)
     plt.bar_label(qwen_bars, fmt='%.1f', padding=5)
     plt.xticks(x+width/2, x_labels)
@@ -24,8 +24,8 @@ def plot(prompt_pair, arr, llama_err, qwen_err):
     plt.show()
 
 def prepare(prompt_pair):
-    file=open("llama_qwen_rounds.json")
-    file2=open("llama4_qwen_rounds_SE.json")
+    file=open("basic_gc_rounds.json")
+    file2=open("basic_gc_round_SE.json")
     data=json.load(file)
     arr = data[prompt_pair]
     errors=json.load(file2)

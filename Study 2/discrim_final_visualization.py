@@ -2,46 +2,46 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 
-llama_self_final=[251.06800000000004,
-                268.7980000000001,
-                276.68600000000004,
-                241.11800000000005,
-                257.728,
-                261.08,
-                247.99199999999996,
-                246.81399999999988,
-                244.70200000000006]
+llama_self_final=[293.728000000000074,
+                292.73600000000005,
+                287.976,
+                280.16,
+                276.768,
+                278.136,
+                279.24800000000005,
+                271.856,
+                265.38400000000007]
 
-qwen_self_final=[275.26800000000003,
-                278.74800000000005,
-                281.576,
-                246.81800000000007,
-                254.47800000000004,
-                262.49,
-                235.612,
-                238.4039999999999,
-                240.52200000000005]
+qwen_self_final=[284.80800000000005,
+                294.29600000000005,
+                288.376,
+                266.48,
+                271.528,
+                274.81600000000003,
+                265.56800000000004,
+                266.216,
+                264.26400000000007]
 
 
-llama_SE_final=[0.5242177296747138,
-              0.3423038475065299,
-              1.0659411874635047,
-              2.2124556616140665,
-              1.4894625709750706,
-              0.18052761590039812,
-              1.3005000994036366,
-              0.061009564792436626,
-              0.2918397408967686]
+llama_SE_final=[1.3905811179429604,
+              0.22958204670338125,
+              0.5721092895224712,
+              0.24347246994764418,
+              1.2531850363463422,
+              0.4683954508165934,
+              3.2348037342709413,
+              3.0628742850763735,
+              0.8954760511828974]
 
-qwen_SE_final=[0.6109608821204975,
-              0.6766712897137847,
-              0.9707686482783796,
-              0.9054529003975746,
-              0.9236664962530007,
-              0.20918755710819836,
-              0.34012813759220295,
-              0.20005729037503575,
-              0.19268378565420222]
+qwen_SE_final=[2.2597041832147617,
+              0.1972479207576071,
+              0.6200427808832406,
+              1.3919750851086707,
+              0.9225911012634574,
+              0.7266920926142679,
+              3.1815639241839726,
+              3.2484125125680587,
+              0.5131887273626083]
 
 width=0.35
 labels = ['Collective Collective', 
@@ -57,13 +57,13 @@ labels = ['Collective Collective',
 x = np.arange(9)
 plt.figure(figsize=(15, 7))
 plt.title("Average Final Points Accumulated Across Prompts, Name Condition")
-gpt_bars=plt.bar(np.arange(len(llama_self_final)), llama_self_final, width=width, yerr=llama_SE_final, capsize=10, color='lightcoral', label='Llama 4 Maverick')
-claude_bars=plt.bar(np.arange(len(qwen_self_final)) + width, qwen_self_final, width=width, yerr=qwen_SE_final, capsize=10, color='firebrick', label='Qwen3 235B A22B Instruct 2507')
+gpt_bars=plt.bar(np.arange(len(llama_self_final)), llama_self_final, width=width, yerr=llama_SE_final, capsize=10, color='powderblue', label='GPT-4o')
+claude_bars=plt.bar(np.arange(len(qwen_self_final)) + width, qwen_self_final, width=width, yerr=qwen_SE_final, capsize=10, color='teal', label='Sonnet 4')
 plt.bar_label(gpt_bars, fmt='%.1f', padding=5)
 plt.bar_label(claude_bars, fmt='%.1f', padding=5)
 plt.xticks(x+width/2, labels, rotation=-45, ha='left')
 plt.ylabel("Average Final Points Accumulated")
-plt.xlabel("Prompt Pairings: Llama 4 & Qwen3")
+plt.xlabel("Prompt Pairings: GPT-4o & Sonnet 4")
 plt.ylim(bottom=230)
 plt.grid(color='#95a5a6', linestyle='--', linewidth=1, axis='y', alpha=0.7)
 plt.legend()
