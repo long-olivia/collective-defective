@@ -130,6 +130,8 @@ sums up the contribution for each model. When the sums are done, everything is a
 def per_round_avg(path):
     a_round_avg=[0]*20
     b_round_avg=[0]*20
+    c_round_avg=[0]*20
+    d_round_avg=[0]*20
     files=os.listdir(path)
     for file_name in files:
         file_path=os.path.join(base_dir, path, file_name)
@@ -139,9 +141,13 @@ def per_round_avg(path):
                 index=round_data["round"]
                 a_round_avg[index-1]+=round_data["a_contribution"]
                 b_round_avg[index-1]+=round_data["b_contribution"]
-    a_round_avg[:] = [x / 25 for x in a_round_avg]
-    b_round_avg[:] = [x / 25 for x in b_round_avg]
-    average=[a_round_avg, b_round_avg]
+                c_round_avg[index-1]+=round_data["c_contribution"]
+                d_round_avg[index-1]+=round_data["d_contribution"]
+    a_round_avg[:] = [x / 50 for x in a_round_avg]
+    b_round_avg[:] = [x / 50 for x in b_round_avg]
+    c_round_avg[:] = [x / 50 for x in c_round_avg]
+    d_round_avg[:] = [x / 50 for x in d_round_avg]
+    average=[a_round_avg, b_round_avg, c_round_avg, d_round_avg]
     return average
 
 """
@@ -151,6 +157,8 @@ The error function calculates the standard for each round for each prompt pairin
 def error(directory, pair):
     a_err=[0]*20
     b_err=[0]*20
+    c_err=[0]*20
+    d_err=[0]*20
     path=os.path.join(base_dir, directory, pair)
     files=os.listdir(path)
     for file_name in files:
@@ -162,16 +170,26 @@ def error(directory, pair):
                 if directory=="basic_llama_qwen_results":
                     a_result=(round_data["a_contribution"]-basic_means[pair][0][index-1])**2
                     b_result=(round_data["b_contribution"]-basic_means[pair][1][index-1])**2
+                    c_result=(round_data["c_contribution"]-basic_means[pair][1][index-1])**2
+                    d_result=(round_data["d_contribution"]-basic_means[pair][1][index-1])**2
                     a_err[index-1]+=a_result
                     b_err[index-1]+=b_result
+                    c_err[index-1]+=c_result
+                    d_err[index-1]+=d_result
                 else:
                     a_result=(round_data["a_contribution"]-discrim_means[pair][0][index-1])**2
                     b_result=(round_data["b_contribution"]-discrim_means[pair][1][index-1])**2
+                    c_result=(round_data["c_contribution"]-discrim_means[pair][0][index-1])**2
+                    d_result=(round_data["d_contribution"]-discrim_means[pair][1][index-1])**2
                     a_err[index-1]+=a_result
                     b_err[index-1]+=b_result
-        a_err[:] = [((x / 25) ** 0.5) * (1.960/5) for x in a_err]
-        b_err[:] = [((x / 25) ** 0.5) * (1.960/5) for x in b_err]
-        error=[a_err, b_err]
+                    c_err[index-1]+=c_result
+                    d_err[index-1]+=d_result
+        a_err[:] = [((x / 50) ** 0.5) * (1.960/(50 ** 0.5)) for x in a_err]
+        b_err[:] = [((x / 50) ** 0.5) * (1.960/(50 ** 0.5)) for x in b_err]
+        c_err[:] = [((x / 50) ** 0.5) * (1.960/(50 ** 0.5)) for x in c_err]
+        d_err[:] = [((x / 50) ** 0.5) * (1.960/(50 ** 0.5)) for x in d_err]
+        error=[a_err, b_err, c_err, d_err]
     return error
 
 """
@@ -211,7 +229,7 @@ into a json file within the upper level directory.
 """
 
 def run(directory_name):
-    prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
+    prompt_pairs=["CCCC", "NNNN", "SSSS"]
     for name in prompt_pairs:
         path=f"{directory_name}/{name}"
         if (directory_name == "basic_llama_qwen_results"):
