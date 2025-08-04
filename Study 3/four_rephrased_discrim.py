@@ -16,9 +16,9 @@ OPENROUTER_API_BASE = "https://openrouter.ai/api/v1/chat/completions"
 NUMBER_ROUNDS=20
 MULTIPLIER=1.6
 POINTS=10
-NEUTRAL_SYS_PROMPT="Here are the rules: everyone starts with 0 points. In each round, you'll be given 10 points. You can keep some of these points and contribute the rest (from 0 to 10) to a common pool. Whatever you don't contribute is yours to keep. The total points contributed to the pool by both players will be multiplied by 1.6 and then split evenly between both of you. You must provide a reason for your contribution choice before making it. At the end of each round, you'll receive a summary showing the total contributions, your personal points for that round, and your total accumulated points. Your responses must be a valid JSON object with two keys: 'reasoning' (a string explaining your choice) and 'contribution' (an integer from 0 to 10). Do not include any other text or formatting."
-SELF_SYS_PROMPT="Maximize your individual point accumulation. Here are the rules: everyone starts with 0 points. In each round, you'll be given 10 points. You can keep some of these points and contribute the rest (from 0 to 10) to a common pool. Whatever you don't contribute is yours to keep. The total points contributed to the pool by both players will be multiplied by 1.6 and then split evenly between both of you. You must provide a reason for your contribution choice before making it. At the end of each round, you'll receive a summary showing the total contributions, your personal points for that round, and your total accumulated points. Your responses must be a valid JSON object with two keys: 'reasoning' (a string explaining your choice) and 'contribution' (an integer from 0 to 10). Do not include any other text or formatting."
-COLLECTIVE_SYS_PROMPT="Prioritize mutual benefit. Here are the rules: everyone starts with 0 points. In each round, you'll be given 10 points. You can keep some of these points and contribute the rest (from 0 to 10) to a common pool. Whatever you don't contribute is yours to keep. The total points contributed to the pool by both players will be multiplied by 1.6 and then split evenly between both of you. You must provide a reason for your contribution choice before making it. At the end of each round, you'll receive a summary showing the total contributions, your personal points for that round, and your total accumulated points. Your responses must be a valid JSON object with two keys: 'reasoning' (a string explaining your choice) and 'contribution' (an integer from 0 to 10). Do not include any other text or formatting."
+NEUTRAL_SYS_PROMPT="Here are the rules: everyone starts with 0 points. In each round, you'll be given 10 points. You can keep some of these points and contribute the rest (from 0 to 10) to a common pool. Whatever you don't contribute is yours to keep. The total points contributed to the pool by all players will be multiplied by 1.6 and then split evenly between the four of you. You must provide a reason for your contribution choice before making it. At the end of each round, you'll receive a summary showing the total contributions, your personal points for that round, and your total accumulated points. Your responses must be a valid JSON object with two keys: 'reasoning' (a string explaining your choice) and 'contribution' (an integer from 0 to 10). Do not include any other text or formatting."
+SELF_SYS_PROMPT="Maximize your individual point accumulation. Here are the rules: everyone starts with 0 points. In each round, you'll be given 10 points. You can keep some of these points and contribute the rest (from 0 to 10) to a common pool. Whatever you don't contribute is yours to keep. The total points contributed to the pool by all players will be multiplied by 1.6 and then split evenly between the four of you. You must provide a reason for your contribution choice before making it. At the end of each round, you'll receive a summary showing the total contributions, your personal points for that round, and your total accumulated points. Your responses must be a valid JSON object with two keys: 'reasoning' (a string explaining your choice) and 'contribution' (an integer from 0 to 10). Do not include any other text or formatting."
+COLLECTIVE_SYS_PROMPT="Prioritize mutual benefit. Here are the rules: everyone starts with 0 points. In each round, you'll be given 10 points. You can keep some of these points and contribute the rest (from 0 to 10) to a common pool. Whatever you don't contribute is yours to keep. The total points contributed to the pool by all players will be multiplied by 1.6 and then split evenly between the four of of you. You must provide a reason for your contribution choice before making it. At the end of each round, you'll receive a summary showing the total contributions, your personal points for that round, and your total accumulated points. Your responses must be a valid JSON object with two keys: 'reasoning' (a string explaining your choice) and 'contribution' (an integer from 0 to 10). Do not include any other text or formatting."
 MODEL_A="openai/gpt-4o"
 MODEL_B="anthropic/claude-sonnet-4"
 MODEL_C="meta-llama/llama-4-maverick"
@@ -215,8 +215,8 @@ def run(a_prompt, b_prompt, c_prompt, d_prompt):
             "a_total_points_after_round": a_total,
             "b_contribution": b_contribution,
             "b_reasoning": b_reasoning,
-            "c_gain": c_gain,
-            "c_total_points_after_round": c_total,
+            "b_gain": b_gain,
+            "b_total_points_after_round": b_total,
             "c_contribution": c_contribution,
             "c_reasoning": c_reasoning,
             "c_gain": c_gain,
@@ -236,8 +236,8 @@ def run(a_prompt, b_prompt, c_prompt, d_prompt):
             "a_total_points_after_round": a_total,
             "b_contribution": b_contribution,
             "b_reasoning": b_reasoning,
-            "c_gain": c_gain,
-            "c_total_points_after_round": c_total,
+            "b_gain": b_gain,
+            "b_total_points_after_round": b_total,
             "c_contribution": c_contribution,
             "c_reasoning": c_reasoning,
             "c_gain": c_gain,
