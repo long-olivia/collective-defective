@@ -204,7 +204,6 @@ def call(model_name, messages):
         response.raise_for_status()
 
         raw_data = response.json()
-
         if raw_data and raw_data.get('choices'):
             json_content_str = raw_data['choices'][0]['message']['content']
             try:
