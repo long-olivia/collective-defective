@@ -3,7 +3,7 @@
 pairs=(
   "collective collective collective collective"
   "neutral neutral neutral neutral"
-  # "self self self self"
+  "self self self self"
 )
 
 models=(
