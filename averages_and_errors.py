@@ -159,7 +159,7 @@ def error(directory, pair):
             data=json.load(file)
             for round_data in data:
                 index=round_data["round"]
-                if directory=="llama4_qwen":
+                if directory=="basic_results":
                     a_result=(round_data["a_contribution"]-basic_means[pair][0][index-1])**2
                     b_result=(round_data["b_contribution"]-basic_means[pair][1][index-1])**2
                     a_err[index-1]+=a_result
@@ -169,9 +169,9 @@ def error(directory, pair):
                     b_result=(round_data["b_contribution"]-discrim_means[pair][1][index-1])**2
                     a_err[index-1]+=a_result
                     b_err[index-1]+=b_result
-        a_err[:] = [((x / 100) ** 0.5) * (1.960/10) for x in a_err]
-        b_err[:] = [((x / 100) ** 0.5) * (1.960/10) for x in b_err]
-        error=[a_err, b_err]
+    a_err[:] = [((x / 100) ** 0.5) * (1.960/10) for x in a_err]
+    b_err[:] = [((x / 100) ** 0.5) * (1.960/10) for x in b_err]
+    error=[a_err, b_err]
     return error
 
 """
@@ -189,7 +189,7 @@ def error_final(directory, pair):
             for round_data in data:
                 index=round_data["round"]
                 if index==20:
-                     if directory=="llama4_qwen":
+                     if directory=="basic_results":
                         a_result=(round_data["a_total_points_after_round"]-basic_final[pair][0])**2
                         b_result=(round_data["b_total_points_after_round"]-basic_final[pair][1])**2
                         a_fin+=a_result
@@ -199,9 +199,9 @@ def error_final(directory, pair):
                         b_result=(round_data["b_total_points_after_round"]-discrim_final[pair][1])**2
                         a_fin+=a_result
                         b_fin+=b_result
-        a_fin = ((a_fin / 100) ** 0.5) * (1.960/10)
-        b_fin = ((b_fin / 100) ** 0.5) * (1.960/10)
-        error_final=[a_fin, b_fin]
+    a_fin = ((a_fin / 100) ** 0.5) * (1.960/10)
+    b_fin = ((b_fin / 100) ** 0.5) * (1.960/10)
+    error_final=[a_fin, b_fin]
     return error_final
 
 """
@@ -214,7 +214,7 @@ def run(directory_name):
     prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
     for name in prompt_pairs:
         path=f"{directory_name}/{name}"
-        if (directory_name == "llama4_qwen"):
+        if (directory_name == "basic_results"):
             basic_final_avg[name] = final_average(path)
             basic_round_avg[name] = per_round_avg(path)
         else:
@@ -228,7 +228,7 @@ def run_error_final(directory_name):
     prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
     for name in prompt_pairs:
         result=error_final(directory_name, name)
-        if (directory_name == "llama4_qwen"):
+        if (directory_name == "basic_results"):
             basic_final_SE[name] = result
         else:
             discrim_final_SE[name] = result
@@ -240,7 +240,7 @@ def run_error(directory_name):
     prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
     for name in prompt_pairs:
         result=error(directory_name, name)
-        if (directory_name == "llama4_qwen"):
+        if (directory_name == "basic_results"):
             basic_round_SE[name] = result
         else:
             discrim_round_SE[name] = result
@@ -257,9 +257,15 @@ if __name__ == "__main__":
     # with open("self_llama_qwen_rounds.json", 'w') as g:
     #     json.dump(discrim_round_avg, g)
 
-    run_error("llama4_qwen")
-    with open("llama4_qwen_rounds_SE.json", 'w') as b:
+    run_error("basic_results")
+    with open("basic_rounds_SE.json", 'w') as b:
         json.dump(basic_round_SE, b)
-    run_error("self_llama4_qwen")
-    with open("self_llama4_qwen_rounds_SE.json", 'w') as s:
+    run_error_final("basic_results")
+    with open("basic_final_SE.json", 'w') as b:
+        json.dump(basic_final_SE, b)
+    run_error("self_results")
+    with open("self_rounds_SE.json", 'w') as s:
         json.dump(discrim_round_SE, s)
+    run_error_final("self_results")
+    with open("self_final_SE.json", 'w') as s:
+        json.dump(discrim_final_SE, s)
