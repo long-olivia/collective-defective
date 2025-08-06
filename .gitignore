@@ -1,2 +1,15 @@
 .env
 /venv
+/llama4_qwen/llama_qwen_reasoning
+/llama4_qwen/llama4_qwen_results
+/llama4_qwen/llama4_qwen_scores
+/llama4_qwen/self_llama4_qwen_results
+/self_results
+/basic_results
+/Study\ 2/basic_gpt_claude_results
+/Study\ 2/basic_llama_qwen_results
+/Study\ 2/reasonings
+/Study\ 2/self_gpt_claude_results
+/Study\ 2/self_llama_qwen_results
+/Study\ 3/four_player_results
+/Study\ 3/four_player_discrim_results
