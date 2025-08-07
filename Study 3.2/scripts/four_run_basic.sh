@@ -21,7 +21,7 @@ do
         for i in {1..10}
             do
                 echo "Running with: $pair, round $i"
-                python four_rephrased_basic.py $pair 
+                python four_rephrased_basic.py $pair $model
                 sleep 1
             done
   done
