@@ -61,4 +61,3 @@ y_major_step=10
 ax.yaxis.set_minor_locator(mticker.MultipleLocator(y_major_step))
 plt.tight_layout()
 plt.savefig("basic")
-
