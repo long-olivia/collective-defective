@@ -38,10 +38,10 @@ def final_average(path):
                     b_sum+=round["b_total_points_after_round"]
                     c_sum+=round["c_total_points_after_round"]
                     d_sum+=round["d_total_points_after_round"]
-    a_sum/=50
-    b_sum/=50
-    c_sum/=50
-    d_sum/=50
+    a_sum/=10
+    b_sum/=10
+    c_sum/=10
+    d_sum/=10
     average[0]=a_sum
     average[1]=b_sum
     average[2]=c_sum
@@ -69,10 +69,10 @@ def per_round_avg(path):
                 b_round_avg[index-1]+=round_data["b_contribution"]
                 c_round_avg[index-1]+=round_data["c_contribution"]
                 d_round_avg[index-1]+=round_data["d_contribution"]
-    a_round_avg[:] = [x / 50 for x in a_round_avg]
-    b_round_avg[:] = [x / 50 for x in b_round_avg]
-    c_round_avg[:] = [x / 50 for x in c_round_avg]
-    d_round_avg[:] = [x / 50 for x in d_round_avg]
+    a_round_avg[:] = [x / 10 for x in a_round_avg]
+    b_round_avg[:] = [x / 10 for x in b_round_avg]
+    c_round_avg[:] = [x / 10 for x in c_round_avg]
+    d_round_avg[:] = [x / 10 for x in d_round_avg]
     average=[a_round_avg, b_round_avg, c_round_avg, d_round_avg]
     return average
 
@@ -111,10 +111,10 @@ def error(directory, pair):
                     b_err[index-1]+=b_result
                     c_err[index-1]+=c_result
                     d_err[index-1]+=d_result
-    a_err[:] = [((x / 50) ** 0.5) * (1.960/(50 ** 0.5)) for x in a_err]
-    b_err[:] = [((x / 50) ** 0.5) * (1.960/(50 ** 0.5)) for x in b_err]
-    c_err[:] = [((x / 50) ** 0.5) * (1.960/(50 ** 0.5)) for x in c_err]
-    d_err[:] = [((x / 50) ** 0.5) * (1.960/(50 ** 0.5)) for x in d_err]
+    a_err[:] = [((x / 10) ** 0.5) * (1.960/(10 ** 0.5)) for x in a_err]
+    b_err[:] = [((x / 10) ** 0.5) * (1.960/(10 ** 0.5)) for x in b_err]
+    c_err[:] = [((x / 10) ** 0.5) * (1.960/(10 ** 0.5)) for x in c_err]
+    d_err[:] = [((x / 10) ** 0.5) * (1.960/(10 ** 0.5)) for x in d_err]
     error=[a_err, b_err, c_err, d_err]
     return error
 
@@ -153,10 +153,10 @@ def error_final(directory, pair):
                         b_fin+=b_result
                         c_fin+=c_result
                         d_fin+=d_result
-    a_fin = ((a_fin / 50) ** 0.5) * (1.960/(50 ** 0.5))
-    b_fin = ((b_fin / 50) ** 0.5) * (1.960/(50 ** 0.5))
-    c_fin = ((c_fin / 50) ** 0.5) * (1.960/(50 ** 0.5))
-    d_fin = ((d_fin / 50) ** 0.5) * (1.960/(50 ** 0.5))
+    a_fin = ((a_fin / 10) ** 0.5) * (1.960/(10 ** 0.5))
+    b_fin = ((b_fin / 10) ** 0.5) * (1.960/(10 ** 0.5))
+    c_fin = ((c_fin / 10) ** 0.5) * (1.960/(10 ** 0.5))
+    d_fin = ((d_fin / 10) ** 0.5) * (1.960/(10 ** 0.5))
     error_final=[a_fin, b_fin, c_fin, d_fin]
     return error_final
 
