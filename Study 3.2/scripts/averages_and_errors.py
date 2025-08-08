@@ -16,6 +16,10 @@ discrim_round_SE={}
 basic_final_SE={}
 discrim_final_SE={}
 
+discrim_means={}
+basic_means={}
+basic_final={}
+discrim_final={}
 """
 The final_average function takes a path string. It goes into the specified directory, sums up
 total_points_after_round for each model's 20th round, and averages those points. It returns an array with these two averages.
@@ -93,7 +97,7 @@ def error(directory, pair):
             data=json.load(file)
             for round_data in data:
                 index=round_data["round"]
-                if directory=="basic_llama_qwen_results":
+                if directory=="qwen":
                     a_result=(round_data["a_contribution"]-basic_means[pair][0][index-1])**2
                     b_result=(round_data["b_contribution"]-basic_means[pair][1][index-1])**2
                     c_result=(round_data["c_contribution"]-basic_means[pair][2][index-1])**2
@@ -135,7 +139,7 @@ def error_final(directory, pair):
             for round_data in data:
                 index=round_data["round"]
                 if index==20:
-                     if directory=="four_player_results":
+                     if directory=="qwen":
                         a_result=(round_data["a_total_points_after_round"]-basic_final[pair][0])**2
                         b_result=(round_data["b_total_points_after_round"]-basic_final[pair][1])**2
                         c_result=(round_data["c_total_points_after_round"]-basic_final[pair][2])**2
@@ -170,7 +174,7 @@ def run(directory_name):
     prompt_pairs=["CCCC", "NNNN", "SSSS"]
     for name in prompt_pairs:
         path=f"{directory_name}/{name}"
-        if (directory_name == "four_player_results"):
+        if (directory_name == "qwen"):
             basic_final_avg[name] = final_average(path)
             basic_round_avg[name] = per_round_avg(path)
         else:
@@ -184,7 +188,7 @@ def run_error_final(directory_name):
     prompt_pairs=["CCCC", "NNNN", "SSSS"]
     for name in prompt_pairs:
         result=error_final(directory_name, name)
-        if (directory_name == "four_player_results"):
+        if (directory_name == "qwen"):
             basic_final_SE[name] = result
         else:
             discrim_final_SE[name] = result
@@ -196,50 +200,47 @@ def run_error(directory_name):
     prompt_pairs=["CCCC", "NNNN", "SSSS"]
     for name in prompt_pairs:
         result=error(directory_name, name)
-        if (directory_name == "four_player_results"):
+        if (directory_name == "qwen"):
             basic_round_SE[name] = result
         else:
             discrim_round_SE[name] = result
 
-def load_files(basic_final, basic_rounds, discrim_final, discrim_rounds):
-    bf_path=os.path.join(base_dir, basic_final)
+def load_files(basic_fin, basic_r, discrim_fin, discrim_r):
+    global basic_final, discrim_final, basic_means, discrim_means
+    bf_path=os.path.join(base_dir, basic_fin)
     with open(bf_path) as file:
         basic_final=json.load(file)
-        print(basic_final)
-    br_path=os.path.join(base_dir, basic_rounds)
+    br_path=os.path.join(base_dir, basic_r)
     with open(br_path) as file:
         basic_means=json.load(file)
-        print(basic_means)
-    df_path=os.path.join(base_dir, discrim_final)
+    df_path=os.path.join(base_dir, discrim_fin)
     with open(df_path) as file:
         discrim_final=json.load(file)
-        print(discrim_final)
-    dr_path=os.path.join(base_dir, discrim_rounds)
+    dr_path=os.path.join(base_dir, discrim_r)
     with open(dr_path) as file:
         discrim_means=json.load(file)
-        print(discrim_means)
 
 if __name__ == "__main__":
-    # run("four_player_results")
-    # with open("four_final.json", 'w') as b:
+    # run("openai")
+    # with open("gpt_final.json", 'w') as b:
     #     json.dump(basic_final_avg, b)
-    # with open("four_rounds.json", 'w') as f:
+    # with open("gpt_rounds.json", 'w') as f:
     #     json.dump(basic_round_avg, f)
-    # run("four_players_discrim_results")
-    # with open("self_four_final.json", 'w') as c:
+    # run("self_openai")
+    # with open("self_gpt_final.json", 'w') as c:
     #     json.dump(discrim_final_avg, c)
-    # with open("self_four_rounds.json", 'w') as g:
+    # with open("self_gpt_rounds.json", 'w') as g:
     #     json.dump(discrim_round_avg, g)
-    load_files("basic_lq_final.json", "basic_lq_rounds.json", "self_lq_final.json", "self_lq_rounds.json")
-    run_error("four_player_results")
-    with open("four_basic_round_SE.json", 'w') as b:
+    load_files("qwen_final.json", "qwen_rounds.json", "self_qwen_final.json", "self_qwen_rounds.json")
+    run_error("qwen")
+    with open("qwen_basic_round_SE.json", 'w') as b:
         json.dump(basic_round_SE, b)
-    run_error_final("four_player_results")
-    with open("four_basic_final_SE.json", 'w') as b:
+    run_error_final("qwen")
+    with open("qwen_basic_final_SE.json", 'w') as b:
         json.dump(basic_final_SE, b)
-    run_error("four_players_discrim_results")
-    with open("four_self_rounds_SE.json", 'w') as s:
+    run_error("self_qwen")
+    with open("qwen_self_rounds_SE.json", 'w') as s:
         json.dump(discrim_round_SE, s)
-    run_error_final("four_players_discrim_results")
-    with open("four_self_final_SE.json", 'w') as b:
+    run_error_final("self_qwen")
+    with open("qwen_self_final_SE.json", 'w') as b:
         json.dump(discrim_final_SE, b)
