@@ -61,7 +61,7 @@ colors = {'GPT-4o': 'teal', 'Sonnet 4': 'lightcoral'}
 
 fig, axes = plt.subplots(3, 3, figsize=(20, 20), sharex=True, sharey=True)
 axes = axes.flatten()
-sns.set_theme(style='whitegrid')
+sns.set_theme(style='white')
 
 for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
     if i == 0:
@@ -77,6 +77,8 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
     ax.set_xlabel('Round')
     ax.set_xticks(range(1, 21))
     ax.set_ylabel('Average Point Contribution (0-10)')
+    ax.set_yticks(range(0,11))
+    ax.tick_params(left=True, labelleft=True)
     ax.set_ylim(0, 10)
 
 
