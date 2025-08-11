@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
-with open("llama_qwen_rounds.json") as file:
+with open("basic_lq_rounds.json") as file:
     no_name=json.load(file)
 
-with open("self_llama_qwen_rounds.json") as file:
+with open("self_lq_rounds.json") as file:
     name=json.load(file)
 
 
@@ -82,5 +82,5 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
 
 plt.tight_layout()
 plt.subplots_adjust(top=0.94)
-plt.suptitle('Study 1: Per Round Model Contributions by Prompt Pairing (Llama 4 Maverick - Qwen3 235B A22B Instruct 2507)')
-plt.savefig('study1_llama_qwen', dpi=600)
+plt.suptitle('Study 2: Per Round Model Contributions by Prompt Pairing (Llama 4 Maverick - Qwen3 235B A22B Instruct 2507)')
+plt.savefig('study2_llama_qwen', dpi=600)

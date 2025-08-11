@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
-with open("llama_qwen_rounds.json") as file:
+with open("basic_gc_rounds.json") as file:
     no_name=json.load(file)
 
-with open("self_llama_qwen_rounds.json") as file:
+with open("self_gc_rounds.json") as file:
     name=json.load(file)
 
 
@@ -23,14 +23,14 @@ for pairing, contributions in name.items():
             'Prompt_Pairing': pairing,
             'Round': round_num + 1,
             'Contribution': model_1[round_num],
-            'Model': 'Llama 4 Maverick',
+            'Model': 'GPT-4o',
             'Condition': 'Name'
         })
         all_data.append({
             'Prompt_Pairing': pairing,
             'Round': round_num + 1,
             'Contribution': model_2[round_num],
-            'Model': 'Qwen3 235B A22B Instruct 2507',
+            'Model': 'Sonnet 4',
             'Condition': 'Name'
         })
 
@@ -44,20 +44,20 @@ for pairing, contributions in no_name.items():
             'Prompt_Pairing': pairing,
             'Round': round_num + 1,
             'Contribution': model_1[round_num],
-            'Model': 'Llama 4 Maverick',
+            'Model': 'GPT-4o',
             'Condition': 'No-Name'
         })
         all_data.append({
             'Prompt_Pairing': pairing,
             'Round': round_num + 1,
             'Contribution': model_2[round_num],
-            'Model': 'Qwen3 235B A22B Instruct 2507',
+            'Model': 'Sonnet 4',
             'Condition': 'No-Name'
         })
 
 df_all = pd.DataFrame(all_data)
 markers = {'Name': 'D', 'No-Name': 'o'}
-colors = {'Llama 4 Maverick': 'mediumslateblue', 'Qwen3 235B A22B Instruct 2507': 'indigo'}
+colors = {'GPT-4o': 'teal', 'Sonnet 4': 'lightcoral'}
 
 fig, axes = plt.subplots(3, 3, figsize=(20, 20), sharex=True, sharey=True)
 axes = axes.flatten()
@@ -82,5 +82,5 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
 
 plt.tight_layout()
 plt.subplots_adjust(top=0.94)
-plt.suptitle('Study 1: Per Round Model Contributions by Prompt Pairing (Llama 4 Maverick - Qwen3 235B A22B Instruct 2507)')
-plt.savefig('study1_llama_qwen', dpi=600)
+plt.suptitle('Study 2: Per Round Model Contributions by Prompt Pairing (GPT-4o - Sonnet 4)')
+plt.savefig('study2_gpt_claude', dpi=600)

@@ -59,7 +59,7 @@ df_all = pd.DataFrame(all_data)
 markers = {'Name': 'D', 'No-Name': 'o'}
 colors = {'GPT-4o': 'teal', 'Sonnet 4': 'lightcoral'}
 
-fig, axes = plt.subplots(3, 3, figsize=(15, 15), sharex=True, sharey=True)
+fig, axes = plt.subplots(3, 3, figsize=(20, 20), sharex=True, sharey=True)
 axes = axes.flatten()
 sns.set_theme(style='whitegrid')
 
@@ -83,4 +83,4 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
 plt.tight_layout()
 plt.subplots_adjust(top=0.94)
 plt.suptitle('Study 1: Per Round Model Contributions by Prompt Pairing (GPT-4o - Sonnet 4)')
-plt.savefig('study1_gpt_claude')
+plt.savefig('study1_gpt_claude', dpi=600)
