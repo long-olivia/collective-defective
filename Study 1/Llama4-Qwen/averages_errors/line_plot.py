@@ -59,7 +59,7 @@ df_all = pd.DataFrame(all_data)
 markers = {'Name': 'D', 'No-Name': 'o'}
 colors = {'Llama 4 Maverick': 'mediumslateblue', 'Qwen3 235B A22B Instruct 2507': 'indigo'}
 
-fig, axes = plt.subplots(3, 3, figsize=(20, 20), sharex=True, sharey=True)
+fig, axes = plt.subplots(3, 3, figsize=(20, 12), sharex=True, sharey=True)
 axes = axes.flatten()
 sns.set_theme(style='white')
 

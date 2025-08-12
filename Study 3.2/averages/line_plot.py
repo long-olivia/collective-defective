@@ -68,7 +68,7 @@ else:
     unique_models = df['Model'].unique()
     unique_pairings = ['CCCC', 'NNNN', 'SSSS']
     
-    fig, axes = plt.subplots(len(unique_models), len(unique_pairings), figsize=(20, 20), sharex=True, sharey=True)
+    fig, axes = plt.subplots(len(unique_models), len(unique_pairings), figsize=(20, 16), sharex=True, sharey=True)
     
     for row_idx, model in enumerate(unique_models):
         for col_idx, pairing in enumerate(unique_pairings):
