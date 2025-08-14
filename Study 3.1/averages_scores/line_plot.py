@@ -150,5 +150,4 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
 plt.tight_layout()
 plt.subplots_adjust(top=0.9)
 plt.suptitle('Study 3.1: Per Round Model Contributions by Prompt Pairing (GPT - Sonnet - Llama - Qwen)')
-plt.show()
-# plt.savefig('study31_gslq', dpi=600)
+plt.savefig('study31_gslq', dpi=600)
