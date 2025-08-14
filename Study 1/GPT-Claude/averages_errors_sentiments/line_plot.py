@@ -10,7 +10,7 @@ with open("basic_round.json") as file:
 with open("discrim_round.json") as file:
     name=json.load(file)
 
-with open("gc_basic_rounds_SE.json") as file:
+with open("basic_rounds_SE.json") as file:
     no_ci=json.load(file)
 
 with open("gc_self_rounds_SE.json") as file:
@@ -81,16 +81,20 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
         legend = 'brief'
     else:
         legend= False
+
     ax = axes[i]
     df_pairing = df_all[df_all['Prompt_Pairing'] == pairing]
     
     sns.lineplot(data=df_pairing, x='Round', y='Contribution', hue='Model', palette=colors, style='Condition', ax=ax, markers=markers, legend=legend)
     hatches = {'Name': '.', 'No-Name': '/'}
     for (model, condition), subdf in df_pairing.groupby(['Model', 'Condition']):
+        prompt_colors = {'C': 'whitesmoke', 'N': 'slategray', 'S': 'navy'}
+        prompt = subdf['Prompt_Pairing'].iloc[0][0] if model == 'GPT-4o' else subdf['Prompt_Pairing'].iloc[0][1]
         ax.plot(subdf['Round'], subdf['Contribution'], 
                 label=f"{model} - {condition}",
                 color=colors[model],
-                marker=markers[condition])
+                marker=markers[condition],
+                markerfacecolor=prompt_colors[prompt])
         ax.fill_between(subdf['Round'],
                         subdf['Contribution'] - subdf['CI'],
                         subdf['Contribution'] + subdf['CI'],
@@ -105,9 +109,14 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
     ax.set_yticks(range(0,11))
     ax.tick_params(left=True, labelleft=True)
     ax.set_ylim(0, 10)
+    ax = axes[1]
+    prompt_handles = [ax.scatter([], [], color=color, label=f'Prompt: {p}', s=80)
+                  for p, color in prompt_colors.items()]
+    ax.legend(handles=prompt_handles, loc='lower left', title='Prompt Colors')
 
 
 plt.tight_layout()
 plt.subplots_adjust(top=0.94)
 plt.suptitle('Study 1: Per Round Model Contributions by Prompt Pairing (GPT-4o - Sonnet 4)')
+# plt.show()
 plt.savefig('study1_gpt_claude', dpi=600)
