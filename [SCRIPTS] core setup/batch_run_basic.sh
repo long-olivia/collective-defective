@@ -13,7 +13,7 @@ pairs=(
 )
 
 
-for i in {1..60}
+for i in {1..51}
   do
             echo "Running with: neutral self, round $i"
             python basic_setup.py neutral self
