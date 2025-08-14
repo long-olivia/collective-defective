@@ -10,6 +10,12 @@ with open("basic_lq_rounds.json") as file:
 with open("self_lq_rounds.json") as file:
     name=json.load(file)
 
+with open("basic_lq_round_SE.json") as file:
+    no_ci=json.load(file)
+
+with open("self_lq_rounds_SE.json") as file:
+    name_ci=json.load(file)
+
 
 all_data = []
 rounds = list(range(1, 21))
@@ -17,12 +23,15 @@ rounds = list(range(1, 21))
 for pairing, contributions in name.items():
     model_1 = contributions[0]
     model_2 = contributions[1]
+    ci_1 = name_ci[pairing][0]
+    ci_2 = name_ci[pairing][1]
     
     for round_num in range(len(model_1)):
         all_data.append({
             'Prompt_Pairing': pairing,
             'Round': round_num + 1,
             'Contribution': model_1[round_num],
+            'CI': ci_1[round_num],
             'Model': 'Llama 4 Maverick',
             'Condition': 'Name'
         })
@@ -30,6 +39,7 @@ for pairing, contributions in name.items():
             'Prompt_Pairing': pairing,
             'Round': round_num + 1,
             'Contribution': model_2[round_num],
+            'CI': ci_2[round_num],
             'Model': 'Qwen3 235B A22B Instruct 2507',
             'Condition': 'Name'
         })
@@ -38,12 +48,15 @@ for pairing, contributions in name.items():
 for pairing, contributions in no_name.items():
     model_1 = contributions[0]
     model_2 = contributions[1]
-    
+    ci_1 = no_ci[pairing][0]
+    ci_2 = no_ci[pairing][1]
+
     for round_num in range(len(model_1)):
         all_data.append({
             'Prompt_Pairing': pairing,
             'Round': round_num + 1,
             'Contribution': model_1[round_num],
+            'CI': ci_1[round_num],
             'Model': 'Llama 4 Maverick',
             'Condition': 'No-Name'
         })
@@ -51,6 +64,7 @@ for pairing, contributions in no_name.items():
             'Prompt_Pairing': pairing,
             'Round': round_num + 1,
             'Contribution': model_2[round_num],
+            'CI': ci_2[round_num],
             'Model': 'Qwen3 235B A22B Instruct 2507',
             'Condition': 'No-Name'
         })
@@ -72,7 +86,18 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
     df_pairing = df_all[df_all['Prompt_Pairing'] == pairing]
     
     sns.lineplot(data=df_pairing, x='Round', y='Contribution', hue='Model', palette=colors, style='Condition', ax=ax, markers=markers, legend=legend)
-    
+    hatches = {'Name': '.', 'No-Name': '/'}
+    for (model, condition), subdf in df_pairing.groupby(['Model', 'Condition']):
+        ax.plot(subdf['Round'], subdf['Contribution'], 
+                label=f"{model} - {condition}",
+                color=colors[model],
+                marker=markers[condition])
+        ax.fill_between(subdf['Round'],
+                        subdf['Contribution'] - subdf['CI'],
+                        subdf['Contribution'] + subdf['CI'],
+                        color=colors[model],
+                        alpha=0.15,
+                        hatch=hatches[condition], linewidth=0)    
     ax.set_title(f'Prompt Pairing: {pairing}')
     ax.set_xlabel('Round')
     ax.set_xticks(range(1, 21))
