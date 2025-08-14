@@ -12,14 +12,17 @@ pairs=(
   "self neutral"
 )
 
-for pair in "${pairs[@]}"
-do
-    for i in {1..100}
-        do
-            echo "Running with: $pair, round $i"
-            python basic_setup.py $pair
-            sleep 1
-        done
-done
 
-deactivate
+for i in {1..60}
+  do
+            echo "Running with: neutral self, round $i"
+            python basic_setup.py neutral self
+            sleep 1
+  done
+
+for i in {1..26}
+  do 
+    echo "Running with neutral collective, round $i"
+    python basic_setup.py neutral collective
+    sleep 1
+  done
