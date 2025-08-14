@@ -17,7 +17,7 @@ do
     for i in {1..75}
         do
             echo "Running with: $pair, round $i"
-            python rephrased_basic.py $pair
+            python rephrased_discrim_gc.py $pair
             sleep 1
         done
 done

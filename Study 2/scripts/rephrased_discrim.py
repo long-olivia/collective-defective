@@ -252,8 +252,8 @@ if __name__ == "__main__":
             b_prompt=sys.argv[2]
             run(a_prompt, b_prompt)
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_filename = f"self_llama_qwen_results/discrim_{a_prompt}_{b_prompt}_llama_qwen_{timestamp}.json"
-            os.makedirs("self_llama_qwen_results", exist_ok=True)
+            output_filename = f"self_lq75/discrim_{a_prompt}_{b_prompt}_lq_{timestamp}.json"
+            os.makedirs("self_lq75", exist_ok=True)
             try:
                 with open(output_filename, 'w') as f:
                     json.dump(results, f, indent=4) 
