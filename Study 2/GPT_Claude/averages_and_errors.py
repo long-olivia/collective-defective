@@ -16,6 +16,11 @@ discrim_round_SE={}
 basic_final_SE={}
 discrim_final_SE={}
 
+basic_final={}
+basic_means={}
+discrim_final={}
+discrim_means={}
+
 """
 The final_average function takes a path string. It goes into the specified directory, sums up
 total_points_after_round for each model's 20th round, and averages those points. It returns an array with these two averages.
@@ -34,8 +39,8 @@ def final_average(path):
                 if round["round"] == 20:
                     a_sum+=round["a_total_points_after_round"]
                     b_sum+=round["b_total_points_after_round"]
-    a_sum/=25
-    b_sum/=25
+    a_sum/=100
+    b_sum/=100
     average[0]=a_sum
     average[1]=b_sum
     return average
@@ -57,8 +62,8 @@ def per_round_avg(path):
                 index=round_data["round"]
                 a_round_avg[index-1]+=round_data["a_contribution"]
                 b_round_avg[index-1]+=round_data["b_contribution"]
-    a_round_avg[:] = [x / 25 for x in a_round_avg]
-    b_round_avg[:] = [x / 25 for x in b_round_avg]
+    a_round_avg[:] = [x / 100 for x in a_round_avg]
+    b_round_avg[:] = [x / 100 for x in b_round_avg]
     average=[a_round_avg, b_round_avg]
     return average
 
@@ -87,8 +92,8 @@ def error(directory, pair):
                     b_result=(round_data["b_contribution"]-discrim_means[pair][1][index-1])**2
                     a_err[index-1]+=a_result
                     b_err[index-1]+=b_result
-    a_err[:] = [((x / 25) ** 0.5) * (1.960/5) for x in a_err]
-    b_err[:] = [((x / 25) ** 0.5) * (1.960/5) for x in b_err]
+    a_err[:] = [((x / 100) ** 0.5) * (1.960/10) for x in a_err]
+    b_err[:] = [((x / 100) ** 0.5) * (1.960/10) for x in b_err]
     error=[a_err, b_err]
     return error
 
@@ -117,8 +122,8 @@ def error_final(directory, pair):
                         b_result=(round_data["b_total_points_after_round"]-discrim_final[pair][1])**2
                         a_fin+=a_result
                         b_fin+=b_result
-    a_fin = ((a_fin / 25) ** 0.5) * (1.960/5)
-    b_fin = ((b_fin / 25) ** 0.5) * (1.960/5)
+    a_fin = ((a_fin / 100) ** 0.5) * (1.960/10)
+    b_fin = ((b_fin / 100) ** 0.5) * (1.960/10)
     error_final=[a_fin, b_fin]
     return error_final
 
@@ -127,6 +132,7 @@ The run function takes a directory (basic_results or self_results) and runs fina
 It adds the return value of each function to the global dictionaries defined above. After it's done, it dumps the global dictionaries
 into a json file within the upper level directory.
 """
+
 def run(directory_name):
     prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
     for name in prompt_pairs:
@@ -162,35 +168,46 @@ def run_error(directory_name):
         else:
             discrim_round_SE[name] = result
 
-def load_files(basic_final, basic_rounds, discrim_final, discrim_rounds):
-    bf_path=os.path.join(base_dir, basic_final)
+def load_files(basic_f, basic_r, discrim_f, discrim_r):
+    global basic_final
+    global basic_means
+    global discrim_final
+    global discrim_means
+    bf_path=os.path.join(base_dir, basic_f)
     with open(bf_path) as file:
         basic_final=json.load(file)
-        print(basic_final)
-    br_path=os.path.join(base_dir, basic_rounds)
+    br_path=os.path.join(base_dir, basic_r)
     with open(br_path) as file:
         basic_means=json.load(file)
-        print(basic_means)
-    df_path=os.path.join(base_dir, discrim_final)
+    df_path=os.path.join(base_dir, discrim_f)
     with open(df_path) as file:
         discrim_final=json.load(file)
-        print(discrim_final)
-    dr_path=os.path.join(base_dir, discrim_rounds)
+    dr_path=os.path.join(base_dir, discrim_r)
     with open(dr_path) as file:
         discrim_means=json.load(file)
-        print(discrim_means)
 
 if __name__ == "__main__":
-    load_files("basic_lq_final.json", "basic_lq_rounds.json", "self_lq_final.json", "self_lq_rounds.json")
-    # run_error("basic_gpt_claude_results")
-    # with open("basic_gc_round_SE.json", 'w') as b:
-    #     json.dump(basic_round_SE, b)
-    # run_error_final("basic_gpt_claude_results")
-    # with open("basic_gc_final_SE.json", 'w') as b:
-    #     json.dump(basic_final_SE, b)
-    # run_error("self_gpt_claude_results")
-    # with open("self_gc_rounds_SE.json", 'w') as s:
-    #     json.dump(discrim_round_SE, s)
-    # run_error_final("self_gpt_claude_results")
-    # with open("self_gc_final_SE.json", 'w') as b:
-    #     json.dump(discrim_final_SE, b)
+    load_files("gc_final.json", "gc_rounds.json", "self_gc_final.json", "self_gc_rounds.json")
+    # run("basic_gpt_claude_results")
+    # with open("gc_final.json", 'w') as b:
+    #     json.dump(basic_final_avg, b)
+    # with open("gc_rounds.json", 'w') as f:
+    #     json.dump(basic_round_avg, f)
+    # run("self_gpt_claude_results")
+    # with open("self_gc_final.json", 'w') as c:
+    #     json.dump(discrim_final_avg, c)
+    # with open("self_gc_rounds.json", 'w') as g:
+    #     json.dump(discrim_round_avg, g)
+
+    run_error("basic_gpt_claude_results")
+    with open("basic_rounds_SE.json", 'w') as b:
+        json.dump(basic_round_SE, b)
+    run_error_final("basic_gpt_claude_results")
+    with open("basic_final_SE.json", 'w') as b:
+        json.dump(basic_final_SE, b)
+    run_error("self_gpt_claude_results")
+    with open("self_rounds_SE.json", 'w') as s:
+        json.dump(discrim_round_SE, s)
+    run_error_final("self_gpt_claude_results")
+    with open("self_final_SE.json", 'w') as s:
+        json.dump(discrim_final_SE, s)

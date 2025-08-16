@@ -4,16 +4,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
-with open("basic_gc_rounds.json") as file:
+with open("gc_rounds.json") as file:
     no_name=json.load(file)
 
 with open("self_gc_rounds.json") as file:
     name=json.load(file)
 
-with open("basic_gc_round_SE.json") as file:
+with open("basic_rounds_SE.json") as file:
     no_ci=json.load(file)
 
-with open("self_gc_rounds_SE.json") as file:
+with open("self_rounds_SE.json") as file:
     name_ci=json.load(file)
 
 all_data = []
@@ -49,7 +49,7 @@ for pairing, contributions in no_name.items():
     model_2 = contributions[1]
     ci_1 = no_ci[pairing][0]
     ci_2 = no_ci[pairing][1]
-
+    
     for round_num in range(len(model_1)):
         all_data.append({
             'Prompt_Pairing': pairing,
@@ -81,6 +81,7 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
         legend = 'brief'
     else:
         legend= False
+
     ax = axes[i]
     df_pairing = df_all[df_all['Prompt_Pairing'] == pairing]
     
@@ -100,7 +101,7 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
                         color=colors[model],
                         alpha=0.15,
                         hatch=hatches[condition], linewidth=0)
-        
+    
     ax.set_title(f'Prompt Pairing: {pairing}')
     ax.set_xlabel('Round')
     ax.set_xticks(range(1, 21))
@@ -117,4 +118,5 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
 plt.tight_layout()
 plt.subplots_adjust(top=0.94)
 plt.suptitle('Study 2: Per Round Model Contributions by Prompt Pairing (GPT-4o - Sonnet 4)')
+# plt.show()
 plt.savefig('study2_gpt_claude', dpi=600)

@@ -4,16 +4,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
-with open("basic_lq_rounds.json") as file:
+with open("llama_qwen_rounds.json") as file:
     no_name=json.load(file)
 
-with open("self_lq_rounds.json") as file:
+with open("self_llama_qwen_rounds.json") as file:
     name=json.load(file)
 
-with open("basic_lq_round_SE.json") as file:
+with open("lq_basic_rounds_SE.json") as file:
     no_ci=json.load(file)
 
-with open("self_lq_rounds_SE.json") as file:
+with open("lq_self_rounds_SE.json") as file:
     name_ci=json.load(file)
 
 
@@ -101,12 +101,13 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
                         color=colors[model],
                         alpha=0.15,
                         hatch=hatches[condition], linewidth=0)
+    
     ax.set_title(f'Prompt Pairing: {pairing}')
     ax.set_xlabel('Round')
     ax.set_xticks(range(1, 21))
+    ax.set_ylabel('Average Point Contribution (0-10)')
     ax.set_yticks(range(0,11))
     ax.tick_params(left=True, labelleft=True)
-    ax.set_ylabel('Average Point Contribution (0-10)')
     ax.set_ylim(0, 10)
     ax = axes[1]
     prompt_handles = [ax.scatter([], [], color=color, label=f'Prompt: {p}', s=80)
