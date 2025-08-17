@@ -61,4 +61,4 @@ def call(text):
   return num
 
 if __name__=="__main__":
-    extract("llama_qwen_reasoning")
+    extract("small5")
