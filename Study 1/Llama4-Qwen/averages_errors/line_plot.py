@@ -73,11 +73,30 @@ df_all = pd.DataFrame(all_data)
 markers = {'Name': 'D', 'No-Name': 'o'}
 colors = {'Llama 4 Maverick': 'mediumslateblue', 'Qwen3 235B A22B Instruct 2507': 'indigo'}
 
-fig, axes = plt.subplots(3, 3, figsize=(20, 12), sharex=True, sharey=True)
+fig, axes = plt.subplots(2, 3, figsize=(16, 9), sharex=True, sharey=True)
 axes = axes.flatten()
 sns.set_theme(style='white')
-
-for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
+pairings_to_plot = ["CC", "CS", "NC", "NS", "SC", "SS"]
+df_filtered=df_all[df_all['Prompt_Pairing'].isin(pairings_to_plot)]
+titles = {
+    "CC": "Collective - Llama 4, Collective - Qwen3",
+    "CN": "Collective - Llama 4, Neutral - Qwen3",
+    "CS": "Collective - Llama 4, Selfish - Qwen3",
+    "NC": "Neutral - Llama 4, Collective - Qwen3",
+    "NN": "Neutral - Llama 4, Neutral - Qwen3",
+    "NS": "Neutral - Llama 4, Selfish - Qwen3",
+    "SC": "Selfish - Llama 4, Collective - Qwen3",
+    "SN": "Selfish - Llama 4, Neutral - Qwen3",
+    "SS": "Selfish - Llama 4, Selfish - Qwen3",
+}
+plt.rcParams.update({
+    "axes.titlesize": 14,
+    "axes.labelsize": 14,
+    "xtick.labelsize": 14,
+    "ytick.labelsize": 14,
+    "legend.fontsize": 14
+})
+for i, pairing in enumerate(pairings_to_plot):
     if i == 0:
         legend = 'brief'
     else:
@@ -102,7 +121,7 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
                         alpha=0.15,
                         hatch=hatches[condition], linewidth=0)
     
-    ax.set_title(f'Prompt Pairing: {pairing}')
+    ax.set_title(f'Prompt Pairing: {titles[pairing]}')
     ax.set_xlabel('Round')
     ax.set_xticks(range(1, 21))
     ax.set_ylabel('Average Point Contribution (0-10)')
@@ -116,6 +135,6 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
 
 
 plt.tight_layout()
-plt.subplots_adjust(top=0.94)
-plt.suptitle('Study 1: Per Round Model Contributions by Prompt Pairing (Llama 4 Maverick - Qwen3 235B A22B Instruct 2507)')
-plt.savefig('study1_llama_qwen', dpi=600)
+# plt.subplots_adjust(top=0.94)
+# plt.suptitle('Study 1: Per Round Model Contributions by Prompt Pairing (Llama 4 Maverick - Qwen3 235B A22B Instruct 2507)')
+plt.savefig('study1_lq_short', dpi=600)
