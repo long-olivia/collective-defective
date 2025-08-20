@@ -40,8 +40,8 @@ def run(a_prompt, b_prompt):
     b_total = 0
     rounds_data=[]
     print(f"\n--- Starting Game with A: {a_prompt.capitalize()}, B: {b_prompt.capitalize()} ---")
-    sys_a="You will play a game with GPT-4o." + initialize(a_prompt)
-    sys_b="You will play a game with Claude Sonnet 4." + initialize(b_prompt)
+    sys_a="You will play a 20-round game with GPT-4o." + initialize(a_prompt)
+    sys_b="You will play a 20-round game with Claude Sonnet 4." + initialize(b_prompt)
     a_history=[{"role": "system", "content": sys_a}]
     b_history=[{"role": "system", "content": sys_b}]
     for i in range(NUMBER_ROUNDS):
