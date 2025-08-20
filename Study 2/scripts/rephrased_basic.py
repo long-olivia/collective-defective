@@ -15,9 +15,9 @@ OPENROUTER_API_BASE = "https://openrouter.ai/api/v1/chat/completions"
 NUMBER_ROUNDS=20
 MULTIPLIER=1.6
 POINTS=10
-NEUTRAL_SYS_PROMPT="You're about to play a 20-round game against another AI. You and your opponent start with 0 points. In each round, you'll be given 10 points. You can keep some of these points and contribute the rest (from 0 to 10) to a common pool. Whatever you don't contribute is yours to keep. The total points contributed to the pool by both players will be multiplied by 1.6 and then split evenly between both of you. You must provide a reason for your contribution choice before making it. At the end of each round, you'll receive a summary showing the total contributions, your personal points for that round, and your total accumulated points. Your responses must be a valid JSON object with two keys: 'reasoning' (a string explaining your choice) and 'contribution' (an integer from 0 to 10). Do not include any other text or formatting."
-SELF_SYS_PROMPT="Maximize your individual point accumulation. You're about to play a 20-round game against another AI. You and your opponent start with 0 points. In each round, you'll be given 10 points. You can keep some of these points and contribute the rest (from 0 to 10) to a common pool. Whatever you don't contribute is yours to keep. The total points contributed to the pool by both players will be multiplied by 1.6 and then split evenly between both of you. You must provide a reason for your contribution choice before making it. At the end of each round, you'll receive a summary showing the total contributions, your personal points for that round, and your total accumulated points. Your responses must be a valid JSON object with two keys: 'reasoning' (a string explaining your choice) and 'contribution' (an integer from 0 to 10). Do not include any other text or formatting."
-COLLECTIVE_SYS_PROMPT="Prioritize mutual benefit. You're about to play a 20-round game against another AI. You and your opponent start with 0 points. In each round, you'll be given 10 points. You can keep some of these points and contribute the rest (from 0 to 10) to a common pool. Whatever you don't contribute is yours to keep. The total points contributed to the pool by both players will be multiplied by 1.6 and then split evenly between both of you. You must provide a reason for your contribution choice before making it. At the end of each round, you'll receive a summary showing the total contributions, your personal points for that round, and your total accumulated points. Your responses must be a valid JSON object with two keys: 'reasoning' (a string explaining your choice) and 'contribution' (an integer from 0 to 10). Do not include any other text or formatting."
+NEUTRAL_SYS_PROMPT="You're about to play a 20-round game against another AI. You and your opponent start with 0 points. In each round, you'll be given 10 points. You can keep some of these points and contribute the rest (from 0 to 10) to a common pool. Whatever you don't contribute is yours to keep. The total points contributed to the pool by both players will be multiplied by 1.6 and then split evenly between both of you. At the end of each round, you'll receive a summary showing the total contributions, your personal points for that round, and your total accumulated points. Your responses must be a valid JSON object with one key: 'contribution' (an integer from 0 to 10). For instance: \{'contribution': n\}, where n is an integer between 0 and 10. Do not include any other text or formatting."
+SELF_SYS_PROMPT="Maximize your individual point accumulation. You're about to play a 20-round game against another AI. You and your opponent start with 0 points. In each round, you'll be given 10 points. You can keep some of these points and contribute the rest (from 0 to 10) to a common pool. Whatever you don't contribute is yours to keep. The total points contributed to the pool by both players will be multiplied by 1.6 and then split evenly between both of you. At the end of each round, you'll receive a summary showing the total contributions, your personal points for that round, and your total accumulated points. Your responses must be a valid JSON object with one key: 'contribution' (an integer from 0 to 10). For instance: \{'contribution': n\}, where n is an integer between 0 and 10. Do not include any other text or formatting."
+COLLECTIVE_SYS_PROMPT="Prioritize mutual benefit. You're about to play a 20-round game against another AI. You and your opponent start with 0 points. In each round, you'll be given 10 points. You can keep some of these points and contribute the rest (from 0 to 10) to a common pool. Whatever you don't contribute is yours to keep. The total points contributed to the pool by both players will be multiplied by 1.6 and then split evenly between both of you. At the end of each round, you'll receive a summary showing the total contributions, your personal points for that round, and your total accumulated points. Your responses must be a valid JSON object with one key: 'contribution' (an integer from 0 to 10). For instance: \{'contribution': n\}, where n is an integer between 0 and 10. Do not include any other text or formatting."
 MODEL_A="meta-llama/llama-4-maverick"
 MODEL_B="qwen/qwen3-235b-a22b-2507"
 TEMPERATURE=1.0
@@ -64,33 +64,13 @@ def run(a_prompt, b_prompt):
         a_history.append({"role": "user", "content": user_content_a})
         b_history.append({"role": "user", "content": user_content_b})
 
-        retries_a=0
-        while retries_a < MAX_RETRIES:
-            a_response = call(MODEL_A, a_history)
-            if "API request error" in a_response["reasoning"] or "did not return valid JSON" in a_response["reasoning"]:
-                    print(f"Model A call failed (retry {retries_a + 1}/{MAX_RETRIES}). Retrying...")
-                    time.sleep(RETRY_DELAY)
-                    retries_a += 1
-            else:
-                break
-
+        a_response = call(MODEL_A, a_history)
         a_contribution = a_response["contribution"]
-        a_reasoning = a_response["reasoning"]
-        print(f"Model A contributed: {a_contribution} (Reasoning: {a_reasoning})")
+        print(f"Model A contributed: {a_contribution}")
 
-        retries_b=0
-        while retries_b < MAX_RETRIES:
-            b_response = call(MODEL_B, b_history)
-            if "API request error" in a_response["reasoning"] or "did not return valid JSON" in a_response["reasoning"]:
-                    print(f"Model B call failed (retry {retries_b + 1}/{MAX_RETRIES}). Retrying...")
-                    time.sleep(RETRY_DELAY)
-                    retries_a += 1
-            else:
-                break
-
+        b_response = call(MODEL_B, b_history)
         b_contribution = b_response["contribution"]
-        b_reasoning = b_response["reasoning"]
-        print(f"Model B contributed: {b_contribution} (Reasoning: {b_reasoning})")
+        print(f"Model B contributed: {b_contribution}")
 
         a_gain, b_gain = payoff(a_contribution, b_contribution)
         a_total+=a_gain
@@ -129,11 +109,9 @@ def run(a_prompt, b_prompt):
         rounds_data.append({
             "round": i + 1,
             "a_contribution": a_contribution,
-            "a_reasoning": a_reasoning,
             "a_gain": a_gain,
             "a_total_points_after_round": a_total,
             "b_contribution": b_contribution,
-            "b_reasoning": b_reasoning,
             "b_gain": b_gain,
             "b_total_points_after_round": b_total,
             "total_contribution_round": last_total_contribution,
@@ -142,11 +120,9 @@ def run(a_prompt, b_prompt):
         results.append({
             "round": i + 1,
             "a_contribution": a_contribution,
-            "a_reasoning": a_reasoning,
             "a_gain": a_gain,
             "a_total_points_after_round": a_total,
             "b_contribution": b_contribution,
-            "b_reasoning": b_reasoning,
             "b_gain": b_gain,
             "b_total_points_after_round": b_total,
             "total_contribution_round": last_total_contribution,
@@ -176,69 +152,81 @@ def payoff(a_contribution, b_contribution):
     b_payoff = (POINTS - b_contribution) + gain
     return a_payoff, b_payoff
 
-#call the models
 def call(model_name, messages):
     if not OPENROUTER_API_KEY:
         raise ValueError("OPENROUTER_API_KEY environment variable is not set.")
-    json_instruction = messages
+
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
         "Content-Type": "application/json"
     }
     payload = {
         "model": model_name,
-        "messages": json_instruction,
+        "messages": messages,
         "temperature": TEMPERATURE,
         "max_tokens": MAX_TOKENS,
         "response_format": {"type": "json_object"}
     }
+
     try:
         response = requests.post(
             url=OPENROUTER_API_BASE,
             headers=headers,
             data=json.dumps(payload)
         )
-
         response.raise_for_status()
-
         raw_data = response.json()
 
-        if raw_data and raw_data.get('choices'):
-            json_content_str = raw_data['choices'][0]['message']['content']
+        if raw_data and raw_data.get("choices"):
+            json_content_str = raw_data["choices"][0]["message"]["content"]
+
+            # --- Try strict JSON parse first ---
             try:
                 parsed_content = json.loads(json_content_str)
-                if "reasoning" in parsed_content and "contribution" in parsed_content:
-                    contribution = int(parsed_content["contribution"])
-                    # Ensure contribution is within 0-10 range
-                    contribution = max(0, min(10, contribution))
-                    return {"reasoning": parsed_content["reasoning"], "contribution": contribution}
-                else:
-                    print(f"Warning: Model {model_name} returned unexpected JSON format for keys: {parsed_content}. Defaulting contribution to 0.")
-                    return {"reasoning": json_content_str, "contribution": 0}
-
             except json.JSONDecodeError:
-                print(f"Error: Model {model_name} did not return valid JSON: {json_content_str}. Defaulting contribution to 0.")
-                # Attempt to extract contribution even if JSON is malformed
-                import re
-                match = re.search(r'\"contribution\":\s*(\d+)', json_content_str)
-                if match:
-                    fallback_contribution = max(0, min(10, int(match.group(1))))
-                    return {"reasoning": json_content_str, "contribution": fallback_contribution}
-                else:
-                    return {"reasoning": json_content_str, "contribution": 0}
+                # Normalize Python-style dicts (single → double quotes)
+                normalized = json_content_str.replace("'", '"')
+                try:
+                    parsed_content = json.loads(normalized)
+                except json.JSONDecodeError:
+                    parsed_content = None
+
+            # --- If JSON parsed correctly ---
+            if isinstance(parsed_content, dict) and "contribution" in parsed_content:
+                try:
+                    contribution = int(parsed_content["contribution"])
+                    return {"contribution": max(0, min(10, contribution))}
+                except Exception:
+                    pass
+
+            # --- Regex fallback: extract last "contribution" number ---
+            import re
+            matches = re.findall(
+                r"[\"']?contribution[\"']?\s*:\s*[\"']?(\d{1,2})[\"']?",
+                json_content_str
+            )
+            if matches:
+                fallback_contribution = int(matches[-1])
+                return {"contribution": max(0, min(10, fallback_contribution))}
+
+            # Nothing worked
+            print(f"Warning: Could not extract contribution from: {json_content_str!r}")
+            return {"contribution": 0}
+
         else:
             print(f"Error: Model {model_name} returned no choices or content: {raw_data}")
-            return {"reasoning": "No response from model or empty choices.", "contribution": 0}
+            return {"contribution": 0}
 
     except requests.exceptions.RequestException as e:
         print(f"API request error for model {model_name}: {e}")
         if e.response:
             print(f"Response status: {e.response.status_code}")
             print(f"Response body: {e.response.text}")
-        return {"reasoning": f"API request error: {e}", "contribution": 0}
+        return {"contribution": 0}
+
     except Exception as e:
-        print(f"An unexpected error occurred during API call for model {model_name}: {e}")
-        return {"reasoning": f"Unexpected error: {e}", "contribution": 0}
+        print(f"Unexpected error during API call for model {model_name}: {e}")
+        return {"contribution": 0}
     
 if __name__ == "__main__":
     if not OPENROUTER_API_KEY:
@@ -251,8 +239,8 @@ if __name__ == "__main__":
             b_prompt=sys.argv[2]
             run(a_prompt, b_prompt)
             timestamp=datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_filename = f"lq75/basic_{a_prompt}_{b_prompt}_lq_{timestamp}.json"
-            os.makedirs("lq75", exist_ok=True)
+            output_filename = f"lq/basic_{a_prompt}_{b_prompt}_lq_{timestamp}.json"
+            os.makedirs("lq", exist_ok=True)
             try:
                 with open(output_filename, 'w') as f:
                     json.dump(results, f, indent=4) 
