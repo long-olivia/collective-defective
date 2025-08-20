@@ -1,8 +1,8 @@
 #!/bin/bash
 
 pairs=(
-  "collective collective collective collective"
-  "neutral neutral neutral neutral"
+  # "collective collective collective collective"
+  # "neutral neutral neutral neutral"
   "self self self self"
 )
 
