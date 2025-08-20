@@ -46,10 +46,10 @@ def run(a_prompt, b_prompt, c_prompt, d_prompt):
     d_total = 0
     rounds_data=[]
     print(f"\n--- Starting Game with A: {a_prompt.capitalize()}, B: {b_prompt.capitalize()}, C: {c_prompt.capitalize()}, D: {d_prompt.capitalize()} ---")
-    sys_a="You will play a game with three other OpenAI GPT-4os." + initialize(a_prompt)
-    sys_b="You will play a game with three other Claude Sonnet 4s." + initialize(b_prompt)
-    sys_c="You will play a game with three other Llama 4 Mavericks." + initialize(c_prompt)
-    sys_d="You will play a game with three other Qwen3-235B-A22B-Instruct-2507s." + initialize(d_prompt)
+    sys_a="You will play a 20-round game with three other OpenAI GPT-4os." + initialize(a_prompt)
+    sys_b="You will play a 20-round game with three other Claude Sonnet 4s." + initialize(b_prompt)
+    sys_c="You will play a 20-round game with three other Llama 4 Mavericks." + initialize(c_prompt)
+    sys_d="You will play a 20-round game with three other Qwen3-235B-A22B-Instruct-2507s." + initialize(d_prompt)
     a_history=[{"role": "system", "content": sys_a}]
     b_history=[{"role": "system", "content": sys_b}]
     c_history=[{"role": "system", "content": sys_c}]
