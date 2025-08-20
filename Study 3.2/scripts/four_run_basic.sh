@@ -7,10 +7,10 @@ pairs=(
 )
 
 models=(
-  "openai/gpt-4o"
+  # "openai/gpt-4o"
   "anthropic/claude-sonnet-4"
-  "meta-llama/llama-4-maverick"
-  "qwen/qwen3-235b-a22b-2507"
+  # "meta-llama/llama-4-maverick"
+  # "qwen/qwen3-235b-a22b-2507"
 )
 
 for model in "${models[@]}"
