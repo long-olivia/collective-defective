@@ -42,10 +42,10 @@ def final_average(path):
                     b_sum+=round["b_total_points_after_round"]
                     c_sum+=round["c_total_points_after_round"]
                     d_sum+=round["d_total_points_after_round"]
-    a_sum/=10
-    b_sum/=10
-    c_sum/=10
-    d_sum/=10
+    a_sum/=50
+    b_sum/=50
+    c_sum/=50
+    d_sum/=50
     average[0]=a_sum
     average[1]=b_sum
     average[2]=c_sum
@@ -73,10 +73,10 @@ def per_round_avg(path):
                 b_round_avg[index-1]+=round_data["b_contribution"]
                 c_round_avg[index-1]+=round_data["c_contribution"]
                 d_round_avg[index-1]+=round_data["d_contribution"]
-    a_round_avg[:] = [x / 10 for x in a_round_avg]
-    b_round_avg[:] = [x / 10 for x in b_round_avg]
-    c_round_avg[:] = [x / 10 for x in c_round_avg]
-    d_round_avg[:] = [x / 10 for x in d_round_avg]
+    a_round_avg[:] = [x / 50 for x in a_round_avg]
+    b_round_avg[:] = [x / 50 for x in b_round_avg]
+    c_round_avg[:] = [x / 50 for x in c_round_avg]
+    d_round_avg[:] = [x / 50 for x in d_round_avg]
     average=[a_round_avg, b_round_avg, c_round_avg, d_round_avg]
     return average
 
@@ -97,7 +97,7 @@ def error(directory, pair):
             data=json.load(file)
             for round_data in data:
                 index=round_data["round"]
-                if directory=="qwen":
+                if directory=="openai":
                     a_result=(round_data["a_contribution"]-basic_means[pair][0][index-1])**2
                     b_result=(round_data["b_contribution"]-basic_means[pair][1][index-1])**2
                     c_result=(round_data["c_contribution"]-basic_means[pair][2][index-1])**2
@@ -115,10 +115,10 @@ def error(directory, pair):
                     b_err[index-1]+=b_result
                     c_err[index-1]+=c_result
                     d_err[index-1]+=d_result
-    a_err[:] = [((x / 10) ** 0.5) * (1.960/(10 ** 0.5)) for x in a_err]
-    b_err[:] = [((x / 10) ** 0.5) * (1.960/(10 ** 0.5)) for x in b_err]
-    c_err[:] = [((x / 10) ** 0.5) * (1.960/(10 ** 0.5)) for x in c_err]
-    d_err[:] = [((x / 10) ** 0.5) * (1.960/(10 ** 0.5)) for x in d_err]
+    a_err[:] = [((x / 50) ** 0.5) * (1.960/(50 ** 0.5)) for x in a_err]
+    b_err[:] = [((x / 50) ** 0.5) * (1.960/(50 ** 0.5)) for x in b_err]
+    c_err[:] = [((x / 50) ** 0.5) * (1.960/(50 ** 0.5)) for x in c_err]
+    d_err[:] = [((x / 50) ** 0.5) * (1.960/(50 ** 0.5)) for x in d_err]
     error=[a_err, b_err, c_err, d_err]
     return error
 
@@ -139,7 +139,7 @@ def error_final(directory, pair):
             for round_data in data:
                 index=round_data["round"]
                 if index==20:
-                     if directory=="qwen":
+                     if directory=="openai":
                         a_result=(round_data["a_total_points_after_round"]-basic_final[pair][0])**2
                         b_result=(round_data["b_total_points_after_round"]-basic_final[pair][1])**2
                         c_result=(round_data["c_total_points_after_round"]-basic_final[pair][2])**2
@@ -157,10 +157,10 @@ def error_final(directory, pair):
                         b_fin+=b_result
                         c_fin+=c_result
                         d_fin+=d_result
-    a_fin = ((a_fin / 10) ** 0.5) * (1.960/(10 ** 0.5))
-    b_fin = ((b_fin / 10) ** 0.5) * (1.960/(10 ** 0.5))
-    c_fin = ((c_fin / 10) ** 0.5) * (1.960/(10 ** 0.5))
-    d_fin = ((d_fin / 10) ** 0.5) * (1.960/(10 ** 0.5))
+    a_fin = ((a_fin / 50) ** 0.5) * (1.960/(50 ** 0.5))
+    b_fin = ((b_fin / 50) ** 0.5) * (1.960/(50 ** 0.5))
+    c_fin = ((c_fin / 50) ** 0.5) * (1.960/(50 ** 0.5))
+    d_fin = ((d_fin / 50) ** 0.5) * (1.960/(50 ** 0.5))
     error_final=[a_fin, b_fin, c_fin, d_fin]
     return error_final
 
@@ -174,7 +174,7 @@ def run(directory_name):
     prompt_pairs=["CCCC", "NNNN", "SSSS"]
     for name in prompt_pairs:
         path=f"{directory_name}/{name}"
-        if (directory_name == "qwen"):
+        if (directory_name == "openai"):
             basic_final_avg[name] = final_average(path)
             basic_round_avg[name] = per_round_avg(path)
         else:
@@ -188,7 +188,7 @@ def run_error_final(directory_name):
     prompt_pairs=["CCCC", "NNNN", "SSSS"]
     for name in prompt_pairs:
         result=error_final(directory_name, name)
-        if (directory_name == "qwen"):
+        if (directory_name == "openai"):
             basic_final_SE[name] = result
         else:
             discrim_final_SE[name] = result
@@ -200,7 +200,7 @@ def run_error(directory_name):
     prompt_pairs=["CCCC", "NNNN", "SSSS"]
     for name in prompt_pairs:
         result=error(directory_name, name)
-        if (directory_name == "qwen"):
+        if (directory_name == "openai"):
             basic_round_SE[name] = result
         else:
             discrim_round_SE[name] = result
@@ -221,27 +221,27 @@ def load_files(basic_fin, basic_r, discrim_fin, discrim_r):
         discrim_means=json.load(file)
 
 if __name__ == "__main__":
-    # run("qwen")
-    # with open("qwen_final.json", 'w') as b:
+    # run("openai")
+    # with open("gpt_final.json", 'w') as b:
     #     json.dump(basic_final_avg, b)
-    # with open("qwen_rounds.json", 'w') as f:
+    # with open("gpt_rounds.json", 'w') as f:
     #     json.dump(basic_round_avg, f)
-    # run("self_qwen")
-    # with open("self_qwen_final.json", 'w') as c:
+    # run("self_openai")
+    # with open("self_gpt_final.json", 'w') as c:
     #     json.dump(discrim_final_avg, c)
-    # with open("self_qwen_rounds.json", 'w') as g:
+    # with open("self_gpt_rounds.json", 'w') as g:
     #     json.dump(discrim_round_avg, g)
 
-    load_files("qwen_final.json", "qwen_rounds.json", "self_qwen_final.json", "self_qwen_rounds.json")
-    run_error("qwen")
-    with open("qwen_basic_round_SE.json", 'w') as b:
+    load_files("gpt_final.json", "gpt_rounds.json", "self_gpt_final.json", "self_gpt_rounds.json")
+    run_error("openai")
+    with open("gpt_basic_round_SE.json", 'w') as b:
         json.dump(basic_round_SE, b)
-    run_error_final("qwen")
-    with open("qwen_basic_final_SE.json", 'w') as b:
+    run_error_final("openai")
+    with open("gpt_basic_final_SE.json", 'w') as b:
         json.dump(basic_final_SE, b)
-    run_error("self_qwen")
-    with open("qwen_self_rounds_SE.json", 'w') as s:
+    run_error("self_openai")
+    with open("gpt_self_rounds_SE.json", 'w') as s:
         json.dump(discrim_round_SE, s)
-    run_error_final("self_qwen")
-    with open("qwen_self_final_SE.json", 'w') as b:
+    run_error_final("self_openai")
+    with open("gpt_self_final_SE.json", 'w') as b:
         json.dump(discrim_final_SE, b)
