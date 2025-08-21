@@ -4,16 +4,16 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 
-with open("ant_rounds.json") as file:
+with open("qwen_rounds.json") as file:
     no_name=json.load(file)
 
-with open("self_ant_rounds.json") as file:
+with open("self_qwen_rounds.json") as file:
     name=json.load(file)
 
-with open("ant_basic_round_SE.json") as file:
+with open("qwen_basic_round_SE.json") as file:
     no_ci=json.load(file)
 
-with open("ant_self_rounds_SE.json") as file:
+with open("qwen_self_rounds_SE.json") as file:
     name_ci=json.load(file)
 
 all_data = []
@@ -143,5 +143,5 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
 
 plt.tight_layout()
 plt.subplots_adjust(top=0.9)
-plt.suptitle('Study 3: Per Round Model Contributions for Sonnet 4, Four-Player Condition')
-plt.savefig('study3_ant', dpi=600)
+plt.suptitle('Study 3: Per Round Model Contributions for Qwen3, Four-Player Condition')
+plt.savefig('study3_qwen', dpi=600)
