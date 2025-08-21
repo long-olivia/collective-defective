@@ -1,8 +1,8 @@
 #!/bin/bash
 
 pairs=(
-  "collective collective collective collective"
-  "neutral neutral neutral neutral"
+  # "collective collective collective collective"
+  # "neutral neutral neutral neutral"
   "self self self self"
 )
 
@@ -18,7 +18,7 @@ do
   echo "Running with model $model"
   for pair in "${pairs[@]}"
   do
-      for i in {1..10}
+      for i in {1..7}
           do
               echo "Running with: $pair, round $i"
               python four_rephrased_discrim.py $pair $model

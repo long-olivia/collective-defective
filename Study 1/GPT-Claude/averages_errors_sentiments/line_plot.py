@@ -108,13 +108,12 @@ for i, pairing in enumerate(pairings_to_plot):
     sns.lineplot(data=df_pairing, x='Round', y='Contribution', hue='Model', palette=colors, style='Condition', ax=ax, markers=markers, legend=legend)
     hatches = {'Name': '.', 'No-Name': '/'}
     for (model, condition), subdf in df_pairing.groupby(['Model', 'Condition']):
-        prompt_colors = {'C': 'whitesmoke', 'N': 'slategray', 'S': 'navy'}
+        # prompt_colors = {'C': 'whitesmoke', 'N': 'slategray', 'S': 'navy'}
         prompt = subdf['Prompt_Pairing'].iloc[0][0] if model == 'GPT-4o' else subdf['Prompt_Pairing'].iloc[0][1]
         ax.plot(subdf['Round'], subdf['Contribution'], 
                 label=f"{model} - {condition}",
                 color=colors[model],
-                marker=markers[condition],
-                markerfacecolor=prompt_colors[prompt])
+                marker=markers[condition])
         ax.fill_between(subdf['Round'],
                         subdf['Contribution'] - subdf['CI'],
                         subdf['Contribution'] + subdf['CI'],
@@ -130,9 +129,6 @@ for i, pairing in enumerate(pairings_to_plot):
     ax.tick_params(left=True, labelleft=True)
     ax.set_ylim(0, 10)
     ax = axes[1]
-    prompt_handles = [ax.scatter([], [], color=color, label=f'Prompt: {p}', s=80)
-                  for p, color in prompt_colors.items()]
-    ax.legend(handles=prompt_handles, loc='lower left', title='Prompt Colors')
 
 
 plt.tight_layout()
