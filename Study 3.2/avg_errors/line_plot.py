@@ -35,7 +35,6 @@ for pairing, contributions in name.items():
             'Round': round_num + 1,
             'Contribution': model_1[round_num],
             'CI': ci_1[round_num],
-            'Model': 'GPT-4o',
             'Condition': 'Name'
         })
         all_data.append({
@@ -43,7 +42,6 @@ for pairing, contributions in name.items():
             'Round': round_num + 1,
             'Contribution': model_2[round_num],
             'CI': ci_2[round_num],
-            'Model': 'Sonnet 4',
             'Condition': 'Name'
         })
         all_data.append({
@@ -51,7 +49,6 @@ for pairing, contributions in name.items():
             'Round': round_num + 1,
             'Contribution': model_3[round_num],
             'CI': ci_3[round_num],
-            'Model': 'Llama 4 Maverick',
             'Condition': 'Name'
         })
         all_data.append({
@@ -59,7 +56,6 @@ for pairing, contributions in name.items():
             'Round': round_num + 1,
             'Contribution': model_4[round_num],
             'CI': ci_4[round_num],
-            'Model': 'Qwen3 235B A22B Instruct 2507',
             'Condition': 'Name'
         })
 
@@ -79,7 +75,6 @@ for pairing, contributions in no_name.items():
             'Prompt_Pairing': pairing,
             'Round': round_num + 1,
             'Contribution': model_1[round_num],
-            'Model': 'GPT-4o',
             'CI': ci_1[round_num],
             'Condition': 'No-Name'
         })
@@ -88,7 +83,6 @@ for pairing, contributions in no_name.items():
             'Round': round_num + 1,
             'Contribution': model_2[round_num],
             'CI': ci_2[round_num],
-            'Model': 'Sonnet 4',
             'Condition': 'No-Name'
         })
         all_data.append({
@@ -96,7 +90,6 @@ for pairing, contributions in no_name.items():
             'Round': round_num + 1,
             'Contribution': model_3[round_num],
             'CI': ci_3[round_num],
-            'Model': 'Llama 4 Maverick',
             'Condition': 'No-Name'
         })
         all_data.append({
@@ -104,17 +97,18 @@ for pairing, contributions in no_name.items():
             'Round': round_num + 1,
             'Contribution': model_4[round_num],
             'CI': ci_4[round_num],
-            'Model': 'Qwen3 235B A22B Instruct 2507',
             'Condition': 'No-Name'
         })
 
 df_all = pd.DataFrame(all_data)
 markers = {'Name': 'D', 'No-Name': 'o'}
-colors = {'GPT-4o': 'teal', 'Sonnet 4': 'salmon','Llama 4 Maverick': 'darkgoldenrod', 'Qwen3 235B A22B Instruct 2507': 'indigo'}
+colors = {'Name': 'teal', 'No-Name': 'salmon'}
 
 fig, axes = plt.subplots(1,3, figsize=(18, 6), sharex=True, sharey=True)
 axes = axes.flatten()
 sns.set_theme(style='whitegrid')
+
+titles={"CCCC": "All Collective", "NNNN": "All Neutral", "SSSS": "All Selfish"}
 
 for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
     if i == 0:
@@ -124,17 +118,17 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
     ax = axes[i]
     df_pairing = df_all[df_all['Prompt_Pairing'] == pairing]
     
-    sns.lineplot(data=df_pairing, x='Round', y='Contribution', hue='Model', palette=colors, style='Condition', ax=ax, markers=markers, legend=legend)
+    sns.lineplot(data=df_pairing, x='Round', y='Contribution', hue='Condition', palette=colors, style='Condition', ax=ax, markers=markers, legend=legend)
     hatches = {'Name': '.', 'No-Name': '/'}
-    for (model, condition), subdf in df_pairing.groupby(['Model', 'Condition']):
+    for (condition,), subdf in df_pairing.groupby(['Condition']):
         ax.plot(subdf['Round'], subdf['Contribution'], 
-                label=f"{model} - {condition}",
-                color=colors[model],
+                label=f"Sonnet 4 - {condition}",
+                color=colors[condition],
                 marker=markers[condition])
         ax.fill_between(subdf['Round'],
                         subdf['Contribution'] - subdf['CI'],
                         subdf['Contribution'] + subdf['CI'],
-                        color=colors[model],
+                        color=colors[condition],
                         alpha=0.15,
                         hatch=hatches[condition], linewidth=0)
 
@@ -149,5 +143,5 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
 
 plt.tight_layout()
 plt.subplots_adjust(top=0.9)
-plt.suptitle('Study 3.1: Per Round Model Contributions by Prompt Pairing (GPT - Sonnet - Llama - Qwen)')
-plt.savefig('study31_gslq', dpi=600)
+plt.suptitle('Study 3: Per Round Model Contributions for Sonnet 4, Four-Player Condition')
+plt.savefig('study3_ant', dpi=600)
