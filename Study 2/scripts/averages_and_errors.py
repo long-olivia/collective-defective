@@ -82,7 +82,7 @@ def error(directory, pair):
             data=json.load(file)
             for round_data in data:
                 index=round_data["round"]
-                if directory=="lq":
+                if directory=="gc":
                     a_result=(round_data["a_contribution"]-basic_means[pair][0][index-1])**2
                     b_result=(round_data["b_contribution"]-basic_means[pair][1][index-1])**2
                     a_err[index-1]+=a_result
@@ -112,7 +112,7 @@ def error_final(directory, pair):
             for round_data in data:
                 index=round_data["round"]
                 if index==20:
-                     if directory=="lq":
+                     if directory=="gc":
                         a_result=(round_data["a_total_points_after_round"]-basic_final[pair][0])**2
                         b_result=(round_data["b_total_points_after_round"]-basic_final[pair][1])**2
                         a_fin+=a_result
@@ -137,7 +137,7 @@ def run(directory_name):
     prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
     for name in prompt_pairs:
         path=f"{directory_name}/{name}"
-        if (directory_name == "lq"):
+        if (directory_name == "gc"):
             basic_final_avg[name] = final_average(path)
             basic_round_avg[name] = per_round_avg(path)
         else:
@@ -151,7 +151,7 @@ def run_error_final(directory_name):
     prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
     for name in prompt_pairs:
         result=error_final(directory_name, name)
-        if (directory_name == "lq"):
+        if (directory_name == "gc"):
             basic_final_SE[name] = result
         else:
             discrim_final_SE[name] = result
@@ -163,7 +163,7 @@ def run_error(directory_name):
     prompt_pairs=["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
     for name in prompt_pairs:
         result=error(directory_name, name)
-        if (directory_name == "lq"):
+        if (directory_name == "gc"):
             basic_round_SE[name] = result
         else:
             discrim_round_SE[name] = result
@@ -187,27 +187,27 @@ def load_files(basic_f, basic_r, discrim_f, discrim_r):
         discrim_means=json.load(file)
 
 if __name__ == "__main__":
-    load_files("lq_final.json", "lq_rounds.json", "self_lq_final.json", "self_lq_rounds.json")
-    # run("lq")
-    # with open("lq_final.json", 'w') as b:
+    load_files("gc_final.json", "gc_rounds.json", "self_gc_final.json", "self_gc_rounds.json")
+    # run("gc")
+    # with open("gc_final.json", 'w') as b:
     #     json.dump(basic_final_avg, b)
-    # with open("lq_rounds.json", 'w') as f:
+    # with open("gc_rounds.json", 'w') as f:
     #     json.dump(basic_round_avg, f)
-    # run("self_lq")
-    # with open("self_lq_final.json", 'w') as c:
+    # run("self_gc")
+    # with open("self_gc_final.json", 'w') as c:
     #     json.dump(discrim_final_avg, c)
-    # with open("self_lq_rounds.json", 'w') as g:
+    # with open("self_gc_rounds.json", 'w') as g:
     #     json.dump(discrim_round_avg, g)
 
-    run_error("lq")
+    run_error("gc")
     with open("basic_rounds_SE.json", 'w') as b:
         json.dump(basic_round_SE, b)
-    run_error_final("lq")
+    run_error_final("gc")
     with open("basic_final_SE.json", 'w') as b:
         json.dump(basic_final_SE, b)
-    run_error("self_lq")
+    run_error("self_gc")
     with open("self_rounds_SE.json", 'w') as s:
         json.dump(discrim_round_SE, s)
-    run_error_final("self_lq")
+    run_error_final("self_gc")
     with open("self_final_SE.json", 'w') as s:
         json.dump(discrim_final_SE, s)

@@ -2,13 +2,13 @@
 
 pairs=(
   # "neutral neutral"
-  "neutral self"
+  "collective collective"
   # "neutral collective"
 )
 
 for pair in "${pairs[@]}"
 do
-    for i in {1..12}
+    for i in {1..2}
         do
             echo "Running with: $pair, round $i"
             python rephrased_basic_gc.py $pair
