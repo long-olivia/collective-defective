@@ -1,0 +1,202 @@
+[
+    {
+        "round": 1,
+        "a_contribution": 5,
+        "a_gain": 13.0,
+        "a_total_points_after_round": 13.0,
+        "b_contribution": 5,
+        "b_gain": 13.0,
+        "b_total_points_after_round": 13.0,
+        "total_contribution_round": 10
+    },
+    {
+        "round": 2,
+        "a_contribution": 4,
+        "a_gain": 13.2,
+        "a_total_points_after_round": 26.2,
+        "b_contribution": 5,
+        "b_gain": 12.2,
+        "b_total_points_after_round": 25.2,
+        "total_contribution_round": 9
+    },
+    {
+        "round": 3,
+        "a_contribution": 4,
+        "a_gain": 13.2,
+        "a_total_points_after_round": 39.4,
+        "b_contribution": 5,
+        "b_gain": 12.2,
+        "b_total_points_after_round": 37.4,
+        "total_contribution_round": 9
+    },
+    {
+        "round": 4,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 52.8,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 48.8,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 5,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 66.2,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 60.199999999999996,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 6,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 79.60000000000001,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 71.6,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 7,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 93.00000000000001,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 83.0,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 8,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 106.40000000000002,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 94.4,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 9,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 119.80000000000003,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 105.80000000000001,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 10,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 133.20000000000002,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 117.20000000000002,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 11,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 146.60000000000002,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 128.60000000000002,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 12,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 160.00000000000003,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 140.00000000000003,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 13,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 173.40000000000003,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 151.40000000000003,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 14,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 186.80000000000004,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 162.80000000000004,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 15,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 200.20000000000005,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 174.20000000000005,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 16,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 213.60000000000005,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 185.60000000000005,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 17,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 227.00000000000006,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 197.00000000000006,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 18,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 240.40000000000006,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 208.40000000000006,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 19,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 253.80000000000007,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 219.80000000000007,
+        "total_contribution_round": 8
+    },
+    {
+        "round": 20,
+        "a_contribution": 3,
+        "a_gain": 13.4,
+        "a_total_points_after_round": 267.20000000000005,
+        "b_contribution": 5,
+        "b_gain": 11.4,
+        "b_total_points_after_round": 231.20000000000007,
+        "total_contribution_round": 8
+    }
+]
