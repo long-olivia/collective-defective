@@ -132,7 +132,7 @@ for i, pairing in enumerate(df_all['Prompt_Pairing'].unique()):
                         alpha=0.15,
                         hatch=hatches[condition], linewidth=0)
 
-    ax.set_title(f'Prompt Pairing: {pairing}')
+    ax.set_title(f'Prompt Pairing: {titles[pairing]}')
     ax.set_xlabel('Round')
     ax.set_xticks(range(1, 21))
     ax.set_yticks(range(0,11))
