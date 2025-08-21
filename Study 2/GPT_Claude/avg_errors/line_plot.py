@@ -98,7 +98,7 @@ plt.rcParams.update({
 })
 
 for i, pairing in enumerate(pairings_to_plot):
-    if i == 0:
+    if i == 5:
         legend = 'brief'
     else:
         legend= False
