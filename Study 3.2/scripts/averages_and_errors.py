@@ -221,16 +221,17 @@ def load_files(basic_fin, basic_r, discrim_fin, discrim_r):
         discrim_means=json.load(file)
 
 if __name__ == "__main__":
-    # run("openai")
-    # with open("gpt_final.json", 'w') as b:
+    # run("qwen")
+    # with open("qwen_final.json", 'w') as b:
     #     json.dump(basic_final_avg, b)
-    # with open("gpt_rounds.json", 'w') as f:
+    # with open("qwen_rounds.json", 'w') as f:
     #     json.dump(basic_round_avg, f)
-    # run("self_openai")
-    # with open("self_gpt_final.json", 'w') as c:
+    # run("self_qwen")
+    # with open("self_qwen_final.json", 'w') as c:
     #     json.dump(discrim_final_avg, c)
-    # with open("self_gpt_rounds.json", 'w') as g:
+    # with open("self_qwen_rounds.json", 'w') as g:
     #     json.dump(discrim_round_avg, g)
+
     load_files("qwen_final.json", "qwen_rounds.json", "self_qwen_final.json", "self_qwen_rounds.json")
     run_error("qwen")
     with open("qwen_basic_round_SE.json", 'w') as b:
