@@ -71,12 +71,12 @@ for pairing, contributions in no_name.items():
 
 df_all = pd.DataFrame(all_data)
 markers = {'Name': 'D', 'No-Name': 'o'}
-colors = {'Llama 4 Maverick': 'mediumslateblue', 'Qwen3 235B A22B Instruct 2507': 'cadetblue'}
+colors = {'Llama 4 Maverick': 'indigo', 'Qwen3 235B A22B Instruct 2507': 'cadetblue'}
 
-fig, axes = plt.subplots(2, 3, figsize=(16, 9), sharex=True, sharey=True)
+fig, axes = plt.subplots(3, 3, figsize=(20, 12), sharex=True, sharey=True)
 axes = axes.flatten()
 sns.set_theme(style='white')
-pairings_to_plot = ["CC", "CS", "NC", "NS", "SC", "SS"]
+pairings_to_plot = ["CC", "CN", "CS", "NC", "NN", "NS", "SC", "SN", "SS"]
 df_filtered=df_all[df_all['Prompt_Pairing'].isin(pairings_to_plot)]
 titles = {
     "CC": "Collective - Llama 4, Collective - Qwen3",
@@ -132,4 +132,4 @@ for i, pairing in enumerate(pairings_to_plot):
 plt.tight_layout()
 # plt.subplots_adjust(top=0.94)
 # plt.suptitle('Study 1: Per Round Model Contributions by Prompt Pairing (Llama 4 Maverick - Qwen3 235B A22B Instruct 2507)')
-plt.savefig('study1_lq_short', dpi=600)
+plt.savefig('study1_llama_qwen', dpi=600)

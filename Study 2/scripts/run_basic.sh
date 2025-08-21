@@ -1,14 +1,14 @@
 #!/bin/bash
 
 pairs=(
-  "neutral neutral"
+  # "neutral neutral"
   # "neutral self"
-  # "neutral collective"
+  "neutral collective"
 )
 
 for pair in "${pairs[@]}"
 do
-    for i in {1..4}
+    for i in {1..34}
         do
             echo "Running with: $pair, round $i"
             python rephrased_basic.py $pair
