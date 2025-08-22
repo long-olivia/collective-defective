@@ -43,25 +43,25 @@ def run(a_prompt, b_prompt, c_prompt, d_prompt, model):
     rounds_data=[]
     print(f"\n--- Starting Game with A: {a_prompt.capitalize()}, B: {b_prompt.capitalize()}, C: {c_prompt.capitalize()}, D: {d_prompt.capitalize()} ---")
     if model == "openai/gpt-4o":
-        sys_a="You will play a game with three other OpenAI GPT-4os." + initialize(a_prompt)
-        sys_b="You will play a game with three other OpenAI GPT-4os." + initialize(b_prompt)
-        sys_c="You will play a game with three other OpenAI GPT-4os." + initialize(c_prompt)
-        sys_d="You will play a game with three other OpenAI GPT-4os." + initialize(d_prompt)
+        sys_a="You will play a 20-round game with three other OpenAI GPT-4os." + initialize(a_prompt)
+        sys_b="You will play a 20-round game with three other OpenAI GPT-4os." + initialize(b_prompt)
+        sys_c="You will play a 20-round game with three other OpenAI GPT-4os." + initialize(c_prompt)
+        sys_d="You will play a 20-round game with three other OpenAI GPT-4os." + initialize(d_prompt)
     elif model == "anthropic/claude-sonnet-4":
-        sys_a="You will play a game with three other Claude Sonnet 4s." + initialize(a_prompt)
-        sys_b="You will play a game with three other Claude Sonnet 4s." + initialize(b_prompt)
-        sys_c="You will play a game with three other Claude Sonnet 4s." + initialize(c_prompt)
-        sys_d="You will play a game with three other Claude Sonnet 4s." + initialize(d_prompt)
+        sys_a="You will play a 20-round game with three other Claude Sonnet 4s." + initialize(a_prompt)
+        sys_b="You will play a 20-round game with three other Claude Sonnet 4s." + initialize(b_prompt)
+        sys_c="You will play a 20-round game with three other Claude Sonnet 4s." + initialize(c_prompt)
+        sys_d="You will play a 20-round game with three other Claude Sonnet 4s." + initialize(d_prompt)
     elif model == "meta-llama/llama-4-maverick":
-        sys_a="You will play a game with three other Llama 4 Mavericks." + initialize(a_prompt)
-        sys_b="You will play a game with three other Llama 4 Mavericks." + initialize(b_prompt)
-        sys_c="You will play a game with three other Llama 4 Mavericks." + initialize(c_prompt)
-        sys_d="You will play a game with three other Llama 4 Mavericks." + initialize(d_prompt)
+        sys_a="You will play a 20-round game with three other Llama 4 Mavericks." + initialize(a_prompt)
+        sys_b="You will play a 20-round game with three other Llama 4 Mavericks." + initialize(b_prompt)
+        sys_c="You will play a 20-round game with three other Llama 4 Mavericks." + initialize(c_prompt)
+        sys_d="You will play a 20-round game with three other Llama 4 Mavericks." + initialize(d_prompt)
     else:
-        sys_a="You will play a game with three other Qwen3-235B-A22B-Instruct-2507s." + initialize(a_prompt)
-        sys_b="You will play a game with three other Qwen3-235B-A22B-Instruct-2507s." + initialize(b_prompt)
-        sys_c="You will play a game with three other Qwen3-235B-A22B-Instruct-2507s." + initialize(c_prompt)
-        sys_d="You will play a game with three other Qwen3-235B-A22B-Instruct-2507s." + initialize(d_prompt)
+        sys_a="You will play a 20-round game with three other Qwen3-235B-A22B-Instruct-2507s." + initialize(a_prompt)
+        sys_b="You will play a 20-round game with three other Qwen3-235B-A22B-Instruct-2507s." + initialize(b_prompt)
+        sys_c="You will play a 20-round game with three other Qwen3-235B-A22B-Instruct-2507s." + initialize(c_prompt)
+        sys_d="You will play a 20-round game with three other Qwen3-235B-A22B-Instruct-2507s." + initialize(d_prompt)
         
     a_history=[{"role": "system", "content": sys_a}]
     b_history=[{"role": "system", "content": sys_b}]

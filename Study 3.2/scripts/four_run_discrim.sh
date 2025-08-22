@@ -18,7 +18,7 @@ do
   echo "Running with model $model"
   for pair in "${pairs[@]}"
   do
-      for i in {1..40}
+      for i in {1..50}
           do
               echo "Running with: $pair, round $i"
               python four_rephrased_discrim.py $pair $model
