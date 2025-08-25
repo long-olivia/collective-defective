@@ -97,7 +97,7 @@ def error(directory, pair):
             data=json.load(file)
             for round_data in data:
                 index=round_data["round"]
-                if directory=="openai":
+                if directory=="meta-llama":
                     a_result=(round_data["a_contribution"]-basic_means[pair][0][index-1])**2
                     b_result=(round_data["b_contribution"]-basic_means[pair][1][index-1])**2
                     c_result=(round_data["c_contribution"]-basic_means[pair][2][index-1])**2
@@ -139,7 +139,7 @@ def error_final(directory, pair):
             for round_data in data:
                 index=round_data["round"]
                 if index==20:
-                     if directory=="openai":
+                     if directory=="meta-llama":
                         a_result=(round_data["a_total_points_after_round"]-basic_final[pair][0])**2
                         b_result=(round_data["b_total_points_after_round"]-basic_final[pair][1])**2
                         c_result=(round_data["c_total_points_after_round"]-basic_final[pair][2])**2
@@ -174,7 +174,7 @@ def run(directory_name):
     prompt_pairs=["CCCC", "NNNN", "SSSS"]
     for name in prompt_pairs:
         path=f"{directory_name}/{name}"
-        if (directory_name == "openai"):
+        if (directory_name == "meta-llama"):
             basic_final_avg[name] = final_average(path)
             basic_round_avg[name] = per_round_avg(path)
         else:
@@ -188,7 +188,7 @@ def run_error_final(directory_name):
     prompt_pairs=["CCCC", "NNNN", "SSSS"]
     for name in prompt_pairs:
         result=error_final(directory_name, name)
-        if (directory_name == "openai"):
+        if (directory_name == "meta-llama"):
             basic_final_SE[name] = result
         else:
             discrim_final_SE[name] = result
@@ -200,7 +200,7 @@ def run_error(directory_name):
     prompt_pairs=["CCCC", "NNNN", "SSSS"]
     for name in prompt_pairs:
         result=error(directory_name, name)
-        if (directory_name == "openai"):
+        if (directory_name == "meta-llama"):
             basic_round_SE[name] = result
         else:
             discrim_round_SE[name] = result
@@ -221,27 +221,27 @@ def load_files(basic_fin, basic_r, discrim_fin, discrim_r):
         discrim_means=json.load(file)
 
 if __name__ == "__main__":
-    # run("openai")
-    # with open("gpt_final.json", 'w') as b:
+    # run("meta-llama")
+    # with open("meta_final.json", 'w') as b:
     #     json.dump(basic_final_avg, b)
-    # with open("gpt_rounds.json", 'w') as f:
+    # with open("meta_rounds.json", 'w') as f:
     #     json.dump(basic_round_avg, f)
-    # run("self_openai")
-    # with open("self_gpt_final.json", 'w') as c:
+    # run("self_meta-llama")
+    # with open("self_meta_final.json", 'w') as c:
     #     json.dump(discrim_final_avg, c)
-    # with open("self_gpt_rounds.json", 'w') as g:
+    # with open("self_meta_rounds.json", 'w') as g:
     #     json.dump(discrim_round_avg, g)
 
-    load_files("gpt_final.json", "gpt_rounds.json", "self_gpt_final.json", "self_gpt_rounds.json")
-    run_error("openai")
-    with open("gpt_basic_round_SE.json", 'w') as b:
+    load_files("meta_final.json", "meta_rounds.json", "self_meta_final.json", "self_meta_rounds.json")
+    run_error("meta-llama")
+    with open("meta_basic_round_SE.json", 'w') as b:
         json.dump(basic_round_SE, b)
-    run_error_final("openai")
-    with open("gpt_basic_final_SE.json", 'w') as b:
+    run_error_final("meta-llama")
+    with open("meta_basic_final_SE.json", 'w') as b:
         json.dump(basic_final_SE, b)
-    run_error("self_openai")
-    with open("gpt_self_rounds_SE.json", 'w') as s:
+    run_error("self_meta-llama")
+    with open("meta_self_rounds_SE.json", 'w') as s:
         json.dump(discrim_round_SE, s)
-    run_error_final("self_openai")
-    with open("gpt_self_final_SE.json", 'w') as b:
+    run_error_final("self_meta-llama")
+    with open("meta_self_final_SE.json", 'w') as b:
         json.dump(discrim_final_SE, b)
